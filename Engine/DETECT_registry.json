@@ -1,0 +1,34 @@
+[
+  {
+    "id": "ATO_GOTTMAN_DEFENSIVENESS",
+    "schema_version": "LD-3.3",
+    "category": "ATOMIC",
+    "last_updated": "2025-08-19",
+    "auto_generated": true,
+    "path": "markers/ato/ATO_GOTTMAN_DEFENSIVENESS.yaml"
+  },
+  {
+    "id": "ATO_GOTTMAN_CONTEMPT",
+    "schema_version": "LD-3.3",
+    "category": "ATOMIC",
+    "last_updated": "2025-08-19",
+    "auto_generated": true,
+    "path": "markers/ato/ATO_GOTTMAN_CONTEMPT.yaml"
+  },
+  {
+    "id": "SEM_CONFLICT_MACRO",
+    "schema_version": "LD-3.3",
+    "category": "SEMANTIC",
+    "last_updated": "2025-08-19",
+    "auto_generated": true,
+    "path": "markers/sem/SEM_CONFLICT_MACRO.yaml"
+  },
+  {
+    "id": "CLU_HOSTILE_DETACHED",
+    "schema_version": "LD-3.3",
+    "category": "CLUSTER",
+    "last_updated": "2025-08-19",
+    "auto_generated": true,
+    "path": "markers/clu/CLU_HOSTILE_DETACHED.yaml"
+  }
+]

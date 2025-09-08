@@ -1,0 +1,31 @@
+{
+  "name": "wordthread-lab-api",
+  "version": "1.0.0",
+  "description": "WORDthread Lab API Server for Marker Engine Frontend",
+  "main": "api_server.js",
+  "scripts": {
+    "start": "node api_server.js",
+    "dev": "nodemon api_server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "mongodb": "^6.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "marker-engine",
+    "nlp",
+    "text-analysis",
+    "mongodb",
+    "api"
+  ],
+  "author": "WORDthread Lab",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

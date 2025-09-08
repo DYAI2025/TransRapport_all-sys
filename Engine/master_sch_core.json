@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://leandeep.ai/schemas/master_sch_core.json",
+  "title": "Master Schema Core Configuration",
+  "description": "Master configuration for multiple analysis schemas with priority and fusion settings",
+  "type": "object",
+  "required": ["id", "active_schemas", "priority", "fusion"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "const": "MASTER_SCH_CORE",
+      "description": "Master schema identifier"
+    },
+    "active_schemas": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SCH_[A-Z_]+\\.json$"
+      },
+      "minItems": 1,
+      "default": [
+        "SCH_DEFAULT.json",
+        "SCH_SELF_DEEP_33.json", 
+        "SCH_BEZIEHUNG.json"
+      ]
+    },
+    "priority": {
+      "type": "object",
+      "patternProperties": {
+        "^SCH_[A-Z_]+\\.json$": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "default": {
+        "SCH_SELF_DEEP_33.json": 0.85,
+        "SCH_BEZIEHUNG.json": 0.70,
+        "SCH_DEFAULT.json": 0.50
+      }
+    },
+    "fusion": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["sum", "weighted_average", "max", "priority_cascade"],
+          "default": "sum"
+        },
+        "normalization": {
+          "type": "boolean",
+          "default": true
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        }
+      }
+    },
+    "context_adaptation": {
+      "type": "object",
+      "properties": {
+        "auto_switch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically switch primary schema based on detected context"
+        },
+        "context_detection": {
+          "type": "object",
+          "properties": {
+            "self_analysis_triggers": {
+              "type": "array",
+              "items": {"type": "string"},
+              "default": ["ich bin", "ich fühle", "meine gedanken", "selbstreflexion"]
+            },
+            "relationship_triggers": {
+              "type": "array", 
+              "items": {"type": "string"},
+              "default": ["wir beide", "zwischen uns", "in der beziehung", "mein partner"]
+            }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "version": {"type": "string", "default": "3.3"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "description": {"type": "string"}
+      }
+    }
+  }
+}

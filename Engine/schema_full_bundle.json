@@ -1,0 +1,1155 @@
+{
+  "metadata": {
+    "bundle_type": "LeanDeep_3.3_Core_Bundle",
+    "generated_at": "2025-08-19T03:16:06.098916",
+    "bundle_hash": "980cdd178f9a855b",
+    "total_markers": 23,
+    "version": "3.3.0"
+  },
+  "markers": {
+    "CLU_NEEDINESS_GUILT_BIND": {
+      "id": "CLU_NEEDINESS_GUILT_BIND",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Bedürftigkeit + moralischer Druck in Kombination"
+        ],
+        "concept": "Subtil-manipulative Bedürftigkeitskommunikation",
+        "pragmatics": "Schuldinduzierte Bindung",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "SEM_DOUBLE_BIND_DISCLAIMER_BUT",
+        "SEM_PERFORMATIVE_HELPLESSNESS",
+        "SEM_MORAL_REFRAMING_GOOD_INTENT",
+        "SEM_VICTIM_OFFENDER_REVERSAL",
+        "SEM_GUILT_APPEAL_NEEDINESS"
+      ],
+      "activation": {
+        "rule": "AT_LEAST 2 DISTINCT SEM IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 3.0,
+        "weight": 0.9,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Ich will dich nicht belasten, aber ich brauche das jetzt von dir.\nA: Ich dachte, du wärst für mich da.",
+        "B: Ohne dich schaffe ich das nicht.\nB: Du bist so kalt.",
+        "A: Ich wollte nur helfen, aber du machst es mir schwer.\nA: Du lässt mich im Stich.",
+        "B: Mach dir keine Sorgen, trotzdem muss das heute passieren.\nB: Ich kann das nicht allein.",
+        "A: Ich meine es nur gut, dennoch reagierst du so hart.\nA: Ohne dich geht es nicht.",
+        "A: Will dich nicht nerven, aber das ist dringend.\nA: Du bist herzlos, das ist deine Schuld.",
+        "B: Ich wollte das Beste, trotzdem stößt du mich weg.\nB: Ohne dich bin ich aufgeschmissen.",
+        "A: Soll keine Last sein, dennoch brauch ich das.\nA: Du lässt mich hängen, wenn ich dich brauche."
+      ],
+      "tags": [
+        "cluster",
+        "guilt_pressure",
+        "escalation"
+      ],
+      "_id": "CLU_NEEDINESS_GUILT_BIND",
+      "display_title": "Subtil-manipulative Bedürftigkeitskommunikation",
+      "updated_at": "2025-08-19T03:16:06.095034Z"
+    },
+    "ATO_YOUR_FAULT_PHRASE": {
+      "id": "ATO_YOUR_FAULT_PHRASE",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Schuldzuschreibung"
+        ],
+        "concept": "Es ist deine Schuld",
+        "pragmatics": "Opfer-Täter-Umkehr",
+        "narrative": "reversal"
+      },
+      "pattern": [
+        "(?i)\\b(das ist (deine|eure) schuld|du bist schuld daran)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.5,
+        "weight": 0.7,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Das ist deine Schuld.",
+        "Du bist schuld daran.",
+        "Eure Schuld, dass es so weit kam.",
+        "Dass es eskaliert ist, ist deine Schuld.",
+        "Du trägst die Schuld dafür.",
+        "Du hast das verursacht.",
+        "Wegen dir ist das passiert.",
+        "Du bist der Grund für das Problem.",
+        "Das geht auf dein Konto.",
+        "Du hast das zu verantworten."
+      ],
+      "tags": [
+        "ato",
+        "blame"
+      ],
+      "_id": "ATO_YOUR_FAULT_PHRASE",
+      "display_title": "Es ist deine Schuld",
+      "updated_at": "2025-08-19T03:16:06.095025Z"
+    },
+    "ATO_CARE_PING": {
+      "id": "ATO_CARE_PING",
+      "display_title": "Care Ping",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Kurzer Care-Ping ohne Erwartungsdruck"
+        ],
+        "concept": "Care Ping",
+        "pragmatics": "Kontakt halten",
+        "narrative": "maintenance"
+      },
+      "pattern": [
+        "(?i)\\bkurz(?:er)? ping\\b",
+        "(?i)\\bhab(?:e)? an dich gedacht\\b",
+        "(?i)\\bkurzes? hallo\\b",
+        "(?i)\\bkurz(?:er)? check-?in\\b",
+        "(?i)\\bpflege-?hallo\\b"
+      ],
+      "composed_of": [],
+      "activation": {
+        "rule": "ANY 1 IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 1.7,
+        "weight": 0.4,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "tags": [
+        "ato",
+        "positiv",
+        "friendship",
+        "ritual",
+        "deeskalation"
+      ],
+      "examples": [
+        "Kurzes Update: Ich bin gut angekommen.",
+        "Denk an dich!",
+        "Wie war dein Tag?",
+        "Kleines Lebenszeichen von mir.",
+        "Wollte mal hören, wie es dir geht.",
+        "Schneller Check-in: Alles gut bei dir?",
+        "Hab gerade an dich gedacht.",
+        "Kurze Frage: Wie läuft deine Woche?",
+        "Kurzer Ping!",
+        "Alles gut bei dir?"
+      ],
+      "detect_class": null,
+      "criteria": null,
+      "updated_at": "2025-08-19T10:30:00Z",
+      "_id": "ATO_CARE_PING"
+    },
+    "SEM_PERFORMATIVE_HELPLESSNESS": {
+      "id": "SEM_PERFORMATIVE_HELPLESSNESS",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Stilisierte Hilflosigkeit + Appell"
+        ],
+        "concept": "Performative Hilflosigkeit",
+        "pragmatics": "Caregiver-Zwang",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "ATO_HELPLESSNESS_DEPENDENCY",
+        "ATO_GUILT_APPEAL_SUPPORT"
+      ],
+      "activation": {
+        "rule": "ANY 2 IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 3.1,
+        "weight": 0.9,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ohne dich schaffe ich das nicht – ich dachte, du wärst für mich da.",
+        "Ich kann das nicht allein, du lässt mich doch nicht im Stich, oder?",
+        "Allein krieg ich das nicht hin, ich hätte da auf dich gezählt.",
+        "Ohne dich geht es nicht, ich dachte immer, du bist an meiner Seite.",
+        "Ich schaffe das nicht, du lässt mich gerade völlig allein.",
+        "Bin völlig hilflos ohne dich, dachte du stehst zu mir.",
+        "Kann das unmöglich allein, du lässt mich hängen.",
+        "Ohne deine Hilfe bin ich aufgeschmissen, ich zählte auf dich.",
+        "Allein schaffe ich das nicht, du wendest dich von mir ab.",
+        "Ich brauche dich, sonst klappt das nicht – dachte, ich kann mich auf dich verlassen."
+      ],
+      "tags": [
+        "sem",
+        "neediness",
+        "guilt_pressure"
+      ],
+      "_id": "SEM_PERFORMATIVE_HELPLESSNESS",
+      "display_title": "Performative Hilflosigkeit",
+      "updated_at": "2025-08-19T03:16:06.095126Z"
+    },
+    "ATO_STATUS_PING": {
+      "id": "ATO_STATUS_PING",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Knappes Status-/Plan-Update"
+        ],
+        "concept": "Status Ping",
+        "pragmatics": "Transparente Alltagskoordination",
+        "narrative": "coordination"
+      },
+      "pattern": [
+        "(?i)\\bplan:\\b",
+        "(?i)\\bzeitplan\\b",
+        "(?i)\\bich melde mich um \\d{1,2}(:\\d{2})?\\b",
+        "(?i)\\bbin (sp(ä|ae)ter|gleich|unterwegs)\\b",
+        "(?i)\\bupdate:"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 35 messages"
+      },
+      "window": {
+        "messages": 35
+      },
+      "scoring": {
+        "base": 1.6,
+        "weight": 0.42,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Plan: Erst einkaufen, dann rufe ich an.",
+        "Zeitplan: Meeting bis 16 Uhr.",
+        "Ich melde mich um 19:00.",
+        "Bin später wieder online.",
+        "Bin unterwegs, schreibe gleich.",
+        "Update: Rückweg in 20 Minuten.",
+        "Plan: Heute Abend telefonieren?",
+        "Zeitplan: Bis 18 Uhr im Büro.",
+        "Ich melde mich um acht.",
+        "Bin gleich da."
+      ],
+      "tags": [
+        "ato",
+        "positiv",
+        "transparency",
+        "coordination",
+        "deeskalation"
+      ],
+      "_id": "ATO_STATUS_PING",
+      "display_title": "Status Ping",
+      "updated_at": "2025-08-19T03:16:06.095017Z"
+    },
+    "MEMA_ABSENCE_OF_ULTIMATUM_IN_CONFLICT": {
+      "id": "MEMA_ABSENCE_OF_ULTIMATUM_IN_CONFLICT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Konflikt ohne Ultimaten"
+        ],
+        "concept": "Omission: Ultimaten fehlen",
+        "pragmatics": "Offenheit statt Zwang",
+        "narrative": "controlled_deescalation"
+      },
+      "detect_class": "absence_meta",
+      "criteria": {
+        "target_set": "ultimatum",
+        "window_messages": 30,
+        "min_E_hits": 3,
+        "strict_zero": true
+      },
+      "activation": {
+        "rule": "CONFLICT_WINDOW_END"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.0,
+        "weight": 0.55,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Ich brauche Verlässlichkeit.\nB: Ich kann an meiner Planung arbeiten.\nA: Mir hilft ein klarer Rhythmus.\nB: Lass uns montags abstimmen.",
+        "A: Das hat mich enttäuscht.\nB: Es tut mir leid.\nA: Ich will verstehen, wie es dazu kam.\nB: Ich erkläre dir den Ablauf.",
+        "A: Ich wünsche mir mehr Rückmeldung.\nB: Abgemacht, ich antworte am selben Tag.\nA: Danke, das entspannt mich.\nB: Ich setze mir eine Erinnerung.",
+        "A: Wir reden aneinander vorbei.\nB: Dann fasse ich zusammen.\nA: Klingt gut.\nB: Stimmt das so für dich?",
+        "A: Ich mag keine plötzlichen Änderungen.\nB: Okay, ich kündige es vorher an.\nA: Das hilft mir.\nB: Danke fürs Feedback."
+      ],
+      "tags": [
+        "mema",
+        "omission",
+        "deeskalation",
+        "positiv"
+      ],
+      "_id": "MEMA_ABSENCE_OF_ULTIMATUM_IN_CONFLICT",
+      "display_title": "Omission: Ultimaten fehlen",
+      "updated_at": "2025-08-19T03:16:06.095082Z"
+    },
+    "SEM_GUILT_APPEAL_NEEDINESS": {
+      "id": "SEM_GUILT_APPEAL_NEEDINESS",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Schuldappell + Abhängigkeit"
+        ],
+        "concept": "Guilt-Appeal (Neediness)",
+        "pragmatics": "Nähe erzwingen",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "ATO_GUILT_APPEAL_SUPPORT",
+        "ATO_HELPLESSNESS_DEPENDENCY"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.9,
+        "weight": 0.8,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich dachte, du wärst für mich da – ohne dich schaffe ich es nicht.",
+        "Du lässt mich im Stich, ich kann das nicht allein.",
+        "Ich hätte das von dir erwartet, ich schaffe das nicht ohne dich.",
+        "Du bist sonst für mich da – jetzt krieg ich das allein nicht hin.",
+        "Ich zähle auf dich, ohne dich geht es nicht.",
+        "Ich hatte gehofft, du stehst zu mir – allein schaffe ich das nicht.",
+        "Du lässt mich hängen – ich kann das unmöglich allein.",
+        "Dachte, ich könnte mich auf dich verlassen – ohne dich bin ich hilflos.",
+        "Du wendest dich von mir ab – ich brauche dich doch.",
+        "Ich zählte darauf, dass du da bist – allein krieg ich das nicht hin."
+      ],
+      "tags": [
+        "sem",
+        "guilt",
+        "neediness"
+      ],
+      "_id": "SEM_GUILT_APPEAL_NEEDINESS",
+      "display_title": "Guilt-Appeal (Neediness)",
+      "updated_at": "2025-08-19T03:16:06.095107Z"
+    },
+    "MEMA_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT": {
+      "id": "MEMA_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Konflikt ohne Charakterangriffe"
+        ],
+        "concept": "Omission: Character Attacks fehlen",
+        "pragmatics": "Sachbezug trotz Spannung",
+        "narrative": "controlled_deescalation"
+      },
+      "detect_class": "absence_meta",
+      "criteria": {
+        "target_set": "character_attack",
+        "window_messages": 30,
+        "min_E_hits": 3,
+        "strict_zero": true
+      },
+      "activation": {
+        "rule": "CONFLICT_WINDOW_END"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.0,
+        "weight": 0.55,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Die Nachricht kam sehr spät.\nB: Ja, ich habe es verpeilt.\nA: Bitte sag nächstes Mal vorher Bescheid.\nB: Mache ich.",
+        "A: Du hast die Datei nicht geteilt.\nB: Stimmt, ich lade sie jetzt hoch.\nA: Danke. Deadline ist eng.\nB: Ich halte sie ein.",
+        "A: Mir fehlt Transparenz bei den Terminen.\nB: Ich trage alles in den Kalender ein.\nA: Gute Idee.\nB: Danke für den Hinweis.",
+        "A: Das Protokoll war unvollständig.\nB: Ich ergänze die offenen Punkte.\nA: Bitte heute noch.\nB: Kommt bis 18 Uhr.",
+        "A: Ich habe mich übergangen gefühlt.\nB: Das war nicht meine Absicht.\nA: Lass uns künftig vorher abstimmen.\nB: Einverstanden."
+      ],
+      "tags": [
+        "mema",
+        "omission",
+        "deeskalation",
+        "positiv"
+      ],
+      "_id": "MEMA_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT",
+      "display_title": "Omission: Character Attacks fehlen",
+      "updated_at": "2025-08-19T03:16:06.095067Z"
+    },
+    "ATO_HELPLESSNESS_DEPENDENCY": {
+      "id": "ATO_HELPLESSNESS_DEPENDENCY",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Hilflosigkeit + Abhängigkeit"
+        ],
+        "concept": "Ohne dich geht es nicht",
+        "pragmatics": "Caregiver-Zwang",
+        "narrative": "neediness"
+      },
+      "pattern": [
+        "(?i)\\b(ohne dich (schaffe|kann) ich das nicht|ich kann das nicht allein|ohne dich geht es nicht|ich schaffe das nicht)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.3,
+        "weight": 0.7,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ohne dich schaffe ich das nicht.",
+        "Ich kann das nicht allein.",
+        "Ohne dich geht es nicht – ich breche zusammen.",
+        "Ich schaffe das einfach nicht, wenn du nicht da bist.",
+        "Allein krieg ich das niemals hin.",
+        "Ohne deine Hilfe bin ich aufgeschmissen.",
+        "Ich kann das unmöglich allein bewältigen.",
+        "Ohne dich bin ich völlig hilflos.",
+        "Allein schaffe ich das nicht, ehrlich.",
+        "Ich brauche dich, sonst klappt das nicht."
+      ],
+      "tags": [
+        "ato",
+        "neediness"
+      ],
+      "_id": "ATO_HELPLESSNESS_DEPENDENCY",
+      "display_title": "Ohne dich geht es nicht",
+      "updated_at": "2025-08-19T03:16:06.095001Z"
+    },
+    "MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT": {
+      "id": "MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Konflikt ohne Beleidigungen"
+        ],
+        "concept": "Omission: Derogation fehlt",
+        "pragmatics": "Selbstregulation im Streit",
+        "narrative": "controlled_deescalation"
+      },
+      "detect_class": "absence_meta",
+      "criteria": {
+        "target_set": "derogation",
+        "window_messages": 30,
+        "min_E_hits": 3,
+        "strict_zero": true
+      },
+      "activation": {
+        "rule": "CONFLICT_WINDOW_END"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.2,
+        "weight": 0.6,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Du hast gestern wieder nicht geschrieben.\nB: Ich war überfordert, es tut mir leid.\nA: So geht das nicht weiter.\nB: Lass uns das heute in Ruhe klären.",
+        "A: Ich habe das Gefühl, du hörst mir nicht zu.\nB: Ich verstehe, dass dich das verletzt.\nA: Ich brauche mehr Verlässlichkeit.\nB: Okay, ich kann das anpassen.",
+        "A: Warum kommst du immer zu spät?\nB: Mein Fehler, ich plane schlecht.\nA: Dann sag wenigstens vorher Bescheid.\nB: Mache ich.",
+        "A: Du hast die Abmachung gebrochen.\nB: Stimmt, das war nicht okay.\nA: Bitte nimm das ernst.\nB: Ja, ich übernehme Verantwortung.",
+        "A: Das fühlt sich unfair an.\nB: Danke, dass du es sagst.\nA: Ich will verstehen, was bei dir los ist.\nB: Ich erklär's dir gern."
+      ],
+      "tags": [
+        "mema",
+        "omission",
+        "deeskalation",
+        "positiv"
+      ],
+      "_id": "MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT",
+      "display_title": "Omission: Derogation fehlt",
+      "updated_at": "2025-08-19T03:16:06.095071Z"
+    },
+    "ATO_MORAL_GOOD_INTENT": {
+      "id": "ATO_MORAL_GOOD_INTENT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Gute-Absicht-Rahmung"
+        ],
+        "concept": "Ich meine es nur gut",
+        "pragmatics": "Moralisches Umdeuten",
+        "narrative": "moral_cover"
+      },
+      "pattern": [
+        "(?i)\\b(ich wollte (doch )?nur (helfen|was gutes|das beste)|ich meine es (doch )?nur gut)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.0,
+        "weight": 0.6,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich wollte doch nur helfen.",
+        "Ich meine es nur gut.",
+        "Ich wollte doch nur das Beste.",
+        "Ich wollte nur was Gutes für uns beide.",
+        "Ich habe es doch nur gut gemeint.",
+        "Ich wollte dir doch nur beistehen.",
+        "Meine Absicht war doch nur positiv.",
+        "Ich hab's doch nur gut gemeint mit dir.",
+        "Wollte doch nur das Richtige tun.",
+        "Ich hab nur versucht zu helfen."
+      ],
+      "tags": [
+        "ato",
+        "moral"
+      ],
+      "_id": "ATO_MORAL_GOOD_INTENT",
+      "display_title": "Ich meine es nur gut",
+      "updated_at": "2025-08-19T03:16:06.095006Z"
+    },
+    "ATO_GUILT_APPEAL_SUPPORT": {
+      "id": "ATO_GUILT_APPEAL_SUPPORT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Schuldappell an Unterstützung"
+        ],
+        "concept": "Du lässt mich im Stich",
+        "pragmatics": "Guilt-Induktion",
+        "narrative": "appeal"
+      },
+      "pattern": [
+        "(?i)\\b(ich dachte, du w(ä|a)rst (immer )?f(ü|u)r mich da|du l(ä|a)sst mich (im stich|allein)|ich h(ä|a)tte das von dir erwartet)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.4,
+        "weight": 0.8,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich dachte, du wärst für mich da.",
+        "Du lässt mich im Stich.",
+        "Ich hätte das von dir erwartet.",
+        "Ich dachte immer, du bist an meiner Seite.",
+        "Du lässt mich gerade völlig allein zurück.",
+        "Ich hatte gehofft, du stehst zu mir.",
+        "Du lässt mich hängen, wenn ich dich brauche.",
+        "Dachte, ich könnte mich auf dich verlassen.",
+        "Du wendest dich von mir ab.",
+        "Ich zählte darauf, dass du da bist."
+      ],
+      "tags": [
+        "ato",
+        "guilt",
+        "appeal"
+      ],
+      "_id": "ATO_GUILT_APPEAL_SUPPORT",
+      "display_title": "Du lässt mich im Stich",
+      "updated_at": "2025-08-19T03:16:06.094997Z"
+    },
+    "ATO_COLD_LABEL": {
+      "id": "ATO_COLD_LABEL",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Kälte-Label"
+        ],
+        "concept": "Du bist kalt/herzlos",
+        "pragmatics": "Moralische Abwertung",
+        "narrative": "attack"
+      },
+      "pattern": [
+        "(?i)\\b(du bist (so )?(kalt|herzlos|gef(ü|u)hllos))\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 20 messages"
+      },
+      "window": {
+        "messages": 20
+      },
+      "scoring": {
+        "base": 2.6,
+        "weight": 0.8,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Du bist so kalt.",
+        "Du bist herzlos.",
+        "Du wirkst komplett gefühllos.",
+        "Du bist einfach eiskalt.",
+        "So herzlos hätte ich dich nicht eingeschätzt.",
+        "Du zeigst keine Gefühle.",
+        "Du bist emotional völlig abgestumpft.",
+        "Du hast ein kaltes Herz.",
+        "Du bist wie aus Stein.",
+        "Du kennst kein Mitgefühl."
+      ],
+      "tags": [
+        "ato",
+        "label",
+        "attack"
+      ],
+      "_id": "ATO_COLD_LABEL",
+      "display_title": "Du bist kalt/herzlos",
+      "updated_at": "2025-08-19T03:16:06.094974Z"
+    },
+    "SEM_VICTIM_OFFENDER_REVERSAL": {
+      "id": "SEM_VICTIM_OFFENDER_REVERSAL",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Kälte-Label + Schuldzuschreibung"
+        ],
+        "concept": "Opfer-Täter-Umkehr",
+        "pragmatics": "Rollenverdrehung",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "ATO_COLD_LABEL",
+        "ATO_YOUR_FAULT_PHRASE"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 3.2,
+        "weight": 1.0,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Du bist so kalt, das ist deine Schuld.",
+        "So herzlos – du bist schuld daran, dass ich leide.",
+        "Gefühllos, und das ist deine Schuld.",
+        "Eiskalt – du hast das verursacht.",
+        "Herzlos – und du trägst die Schuld dafür.",
+        "Du zeigst keine Gefühle, du bist schuld an allem.",
+        "Emotional abgestumpft – wegen dir ist das passiert.",
+        "Du hast ein kaltes Herz, das geht auf dein Konto.",
+        "Du bist wie aus Stein, du hast das zu verantworten.",
+        "Du kennst kein Mitgefühl, du bist der Grund dafür."
+      ],
+      "tags": [
+        "sem",
+        "reversal",
+        "attack",
+        "guilt_pressure"
+      ],
+      "_id": "SEM_VICTIM_OFFENDER_REVERSAL",
+      "display_title": "Opfer-Täter-Umkehr",
+      "updated_at": "2025-08-19T03:16:06.095138Z"
+    },
+    "SEM_DOUBLE_BIND_DISCLAIMER_BUT": {
+      "id": "SEM_DOUBLE_BIND_DISCLAIMER_BUT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Disclaimer direkt gefolgt von Kontrast-Knick"
+        ],
+        "concept": "Doppelbotschaft (Disclaimer→aber)",
+        "pragmatics": "Weich + Belastung",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "ATO_DISCLAIMER_NOT_BURDEN",
+        "ATO_CONTRASTIVE_CONNECTOR_ABER"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.8,
+        "weight": 0.8,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich will dich nicht belasten, aber ich brauche das sofort.",
+        "Mach dir keine Sorgen, trotzdem müsstest du heute noch kommen.",
+        "Will dich nicht nerven, aber kannst du das bitte jetzt übernehmen?",
+        "Ich will dich nicht stören, dennoch brauche ich eine Antwort.",
+        "Keine Sorgen – aber wenn du es nicht machst, schaffe ich es nicht.",
+        "Will dich wirklich nicht unter Druck setzen, trotzdem ist es dringend.",
+        "Soll keine Last sein, dennoch bräuchte ich das heute.",
+        "Möchte dich nicht stressen, aber es ist wichtig.",
+        "Will dir nicht zur Last fallen, trotzdem müsste das heute.",
+        "Ich stresse dich ungern, aber jetzt wäre gut."
+      ],
+      "tags": [
+        "sem",
+        "double_bind",
+        "guilt_pressure"
+      ],
+      "_id": "SEM_DOUBLE_BIND_DISCLAIMER_BUT",
+      "display_title": "Doppelbotschaft (Disclaimer→aber)",
+      "updated_at": "2025-08-19T03:16:06.095100Z"
+    },
+    "CLU_REASSURANCE_SEEKING_LOOP": {
+      "id": "CLU_REASSURANCE_SEEKING_LOOP",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Wiederholte Rückversicherungsanfragen"
+        ],
+        "concept": "Reassurance Seeking",
+        "pragmatics": "Unsicherheitsregulation",
+        "narrative": "attachment_insecurity"
+      },
+      "pattern": [
+        "(?i)\\b(alles gut mit uns|magst du mich( noch)?|bist du( noch)? da)\\b",
+        "(?i)\\b(liebst du mich noch|sind wir okay)\\b",
+        "(?i)\\b(stimmt etwas nicht|ist zwischen uns alles gut)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 2 IN 20 messages"
+      },
+      "window": {
+        "messages": 20
+      },
+      "scoring": {
+        "base": 2.3,
+        "weight": 0.65,
+        "decay": 0.015,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ist alles gut mit uns?",
+        "Magst du mich noch?",
+        "Bist du noch da?",
+        "Liebst du mich noch?",
+        "Sind wir okay zwischen uns?",
+        "Stimmt etwas nicht mit uns?",
+        "Ist zwischen uns alles gut?",
+        "Du bist doch nicht sauer auf mich, oder?",
+        "Ich spüre Distanz - ist alles okay?",
+        "Magst du mich immer noch so wie früher?",
+        "Bist du dir sicher, dass du mich liebst?",
+        "Wir sind doch noch zusammen, oder?",
+        "Ich habe Angst, dass du dich von mir abwendest",
+        "Bestätige mir bitte, dass zwischen uns alles gut ist",
+        "Du ziehst dich nicht zurück, oder?"
+      ],
+      "tags": [
+        "cluster",
+        "reassurance",
+        "early_stage",
+        "attachment"
+      ],
+      "_id": "CLU_REASSURANCE_SEEKING_LOOP",
+      "display_title": "Reassurance Seeking",
+      "updated_at": "2025-08-19T03:16:06.095043Z"
+    },
+    "ATO_DISCLAIMER_NOT_BURDEN": {
+      "id": "ATO_DISCLAIMER_NOT_BURDEN",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Entlastungs-Disclaimer"
+        ],
+        "concept": "Nicht-belasten-Disclaimer",
+        "pragmatics": "Weichzeichner vor Belastung",
+        "narrative": "prelude"
+      },
+      "pattern": [
+        "(?i)\\b(ich will dich nicht belasten|will dich nicht nerven|mach dir keine sorgen|ich will dich nicht stören)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 1.8,
+        "weight": 0.5,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich will dich nicht belasten, aber …",
+        "Mach dir keine Sorgen, ich wollte nur kurz sagen …",
+        "Will dich nicht nerven – nur eine kleine Sache …",
+        "Ich will dich nicht stören, doch folgendes …",
+        "Bitte keine Sorgen machen, trotzdem kurz dazu: …",
+        "Ich möchte dich nicht unter Druck setzen, aber …",
+        "Will dir nicht zur Last fallen, dennoch …",
+        "Soll keine Belastung sein, trotzdem …",
+        "Möchte dich nicht stressen, aber …",
+        "Will dich wirklich nicht nerven, trotzdem …"
+      ],
+      "tags": [
+        "ato",
+        "disclaimer"
+      ],
+      "_id": "ATO_DISCLAIMER_NOT_BURDEN",
+      "display_title": "Nicht-belasten-Disclaimer",
+      "updated_at": "2025-08-19T03:16:06.094989Z"
+    },
+    "ATO_BOUNDARY_NEGOTIATION": {
+      "id": "ATO_BOUNDARY_NEGOTIATION",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Explizite Grenzsetzung + Verhandlung"
+        ],
+        "concept": "Grenzverhandlung",
+        "pragmatics": "Abgleich von Bedürfnissen",
+        "narrative": "boundary_alignment"
+      },
+      "pattern": [
+        "(?i)\\b(grenze|grenzen)\\b.*\\b(respekt|achten)\\b",
+        "(?i)\\b(ist das ok|ist das okay|passt das)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 25 messages"
+      },
+      "window": {
+        "messages": 25
+      },
+      "scoring": {
+        "base": 2.1,
+        "weight": 0.6,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich will meine Grenze respektiert wissen, ist das ok?",
+        "Passt das für dich, wenn wir das so machen?",
+        "Können wir uns auf diese Grenze einigen?",
+        "Ist es okay für dich, wenn ich meine Grenze so setze?",
+        "Respektierst du meine Grenzen? Passt das?",
+        "Ich brauche diese Grenze - ist das für dich okay?",
+        "Können wir gemeinsam schauen, was für uns beide passt?"
+      ],
+      "tags": [
+        "ato",
+        "boundary",
+        "negotiation",
+        "atomic"
+      ],
+      "_id": "ATO_BOUNDARY_NEGOTIATION",
+      "display_title": "Grenzverhandlung",
+      "updated_at": "2025-08-19T03:16:06.094940Z"
+    },
+    "SEM_MORAL_REFRAMING_GOOD_INTENT": {
+      "id": "SEM_MORAL_REFRAMING_GOOD_INTENT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Gute-Absicht + Kontrast"
+        ],
+        "concept": "Moralisches Umdeuten (Good-Intent)",
+        "pragmatics": "Kritik entwerten",
+        "narrative": "guilt_neediness_bind"
+      },
+      "composed_of": [
+        "ATO_MORAL_GOOD_INTENT",
+        "ATO_CONTRASTIVE_CONNECTOR_ABER"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.6,
+        "weight": 0.7,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Ich wollte nur helfen, aber du machst es mir unmöglich.",
+        "Ich meine es nur gut, trotzdem reagierst du so kalt.",
+        "Ich wollte das Beste, dennoch bist du so hart.",
+        "Ich habe es gut gemeint, aber du weist es ab.",
+        "Ich wollte nur was Gutes, trotzdem behandelst du mich so.",
+        "Wollte dir doch nur beistehen, aber du stößt mich weg.",
+        "Meine Absicht war positiv, dennoch kritisierst du mich.",
+        "Hab's nur gut gemeint, trotzdem machst du mir Vorwürfe.",
+        "Wollte das Richtige tun, aber du siehst es nicht.",
+        "Ich hab nur versucht zu helfen, dennoch bin ich der Böse."
+      ],
+      "tags": [
+        "sem",
+        "moral",
+        "guilt_pressure"
+      ],
+      "_id": "SEM_MORAL_REFRAMING_GOOD_INTENT",
+      "display_title": "Moralisches Umdeuten (Good-Intent)",
+      "updated_at": "2025-08-19T03:16:06.095121Z"
+    },
+    "ATO_CONTRASTIVE_CONNECTOR_ABER": {
+      "id": "ATO_CONTRASTIVE_CONNECTOR_ABER",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Kontrast-Konnektor"
+        ],
+        "concept": "aber/trotzdem/dennoch",
+        "pragmatics": "Wendung ins Belastende",
+        "narrative": "contrast"
+      },
+      "pattern": [
+        "(?i)\\b(aber|trotzdem|dennoch)\\b"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 20 messages"
+      },
+      "window": {
+        "messages": 20
+      },
+      "scoring": {
+        "base": 1.5,
+        "weight": 0.3,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "… aber ich halte das nicht mehr aus.",
+        "… trotzdem müsstest du heute noch …",
+        "… dennoch wäre es wichtig, dass du …",
+        "Ich weiß, du hast viel um die Ohren, aber …",
+        "Kein Stress – trotzdem bräuchte ich jetzt …",
+        "Verstehe dich total, aber ich brauche …",
+        "Alles entspannt, dennoch müsste das …",
+        "Ist schon okay, trotzdem wäre es gut …",
+        "Klar, aber wenn du könntest …",
+        "Ja schon, dennoch ist es wichtig …"
+      ],
+      "tags": [
+        "ato",
+        "connector",
+        "contrast"
+      ],
+      "_id": "ATO_CONTRASTIVE_CONNECTOR_ABER",
+      "display_title": "aber/trotzdem/dennoch",
+      "updated_at": "2025-08-19T03:16:06.094981Z"
+    },
+    "SEM_MAINTENANCE_RITUAL": {
+      "id": "SEM_MAINTENANCE_RITUAL",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Kurz-Pflegekontakt kombiniert mit Status/Plan"
+        ],
+        "concept": "Maintenance Ritual",
+        "pragmatics": "Leichtes Beziehungsritual",
+        "narrative": "low_pressure_care"
+      },
+      "composed_of": [
+        "ATO_CARE_PING",
+        "ATO_STATUS_PING"
+      ],
+      "activation": {
+        "rule": "ANY 1 IN 30 messages"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.2,
+        "weight": 0.55,
+        "decay": 0.01,
+        "formula": "logistic"
+      },
+      "examples": [
+        "Wie war dein Tag? Ich melde mich um 18:30.",
+        "Hab an dich gedacht. Bin später wieder online.",
+        "Kurzer Ping! Plan: Heute Abend telefonieren?",
+        "Alles gut bei dir? Update: komme gegen neun.",
+        "Wollte hören, wie es dir geht. Ich schreibe dir um acht.",
+        "Kurzes Update: Bin unterwegs. Wie läuft deine Woche?",
+        "Denk an dich! Zeitplan: Meeting bis 16 Uhr.",
+        "Schneller Check-in: Alles gut? Bin gleich da.",
+        "Kleines Lebenszeichen. Plan: Erst einkaufen, dann melde ich mich.",
+        "Hab gerade an dich gedacht. Update: Rückweg in 20 Minuten."
+      ],
+      "tags": [
+        "sem",
+        "positiv",
+        "friendship",
+        "ritual",
+        "deeskalation"
+      ],
+      "_id": "SEM_MAINTENANCE_RITUAL",
+      "display_title": "Maintenance Ritual",
+      "updated_at": "2025-08-19T03:16:06.095114Z"
+    },
+    "MEMA_PERSISTENT_NEEDINESS_GUILT_BIND": {
+      "id": "MEMA_PERSISTENT_NEEDINESS_GUILT_BIND",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Wiederkehrendes CLU_NEEDINESS_GUILT_BIND"
+        ],
+        "concept": "Persistente Bedürftigkeit-Guilt-Bind",
+        "pragmatics": "Stabile Musterbildung",
+        "narrative": "guilt_neediness_bind"
+      },
+      "criteria": {
+        "source_cluster": "CLU_NEEDINESS_GUILT_BIND",
+        "horizon_windows": 5,
+        "min_windows": 2
+      },
+      "composed_of": [
+        "CLU_NEEDINESS_GUILT_BIND"
+      ],
+      "activation": {
+        "rule": "SERIES_AT_WINDOW_END"
+      },
+      "window": {
+        "messages": 50
+      },
+      "scoring": {
+        "base": 3.4,
+        "weight": 1.0,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Ich will dich nicht belasten, aber ich brauche dich jetzt.\nA: Du lässt mich im Stich.\nA: Ich wollte nur helfen, aber du bist so kalt.",
+        "B: Ohne dich geht es nicht.\nB: Ich dachte, du wärst für mich da.\nB: Du bist herzlos.",
+        "A: Ich meine es nur gut, dennoch hörst du mir nicht zu.\nA: Ich kann das nicht allein.\nA: Du bist so kalt.",
+        "B: Will dich nicht nerven, aber ich brauche das sofort.\nB: Ohne dich schaffe ich das nicht.\nB: Du bist schuld daran, dass es mir so geht.",
+        "A: Ich wollte nur das Beste, aber du weist mich ab.\nA: Du lässt mich allein.\nA: Ohne dich kriege ich das nicht hin.",
+        "A: Mach dir keine Sorgen, trotzdem ist es wichtig.\nA: Ich hätte das von dir erwartet.\nA: Du bist gefühllos, das ist deine Schuld.",
+        "B: Ich will dich nicht stören, dennoch brauche ich dich.\nB: Du wendest dich von mir ab.\nB: Wollte dir beistehen, aber du machst es unmöglich."
+      ],
+      "tags": [
+        "mema",
+        "guilt_pressure",
+        "series"
+      ],
+      "_id": "MEMA_PERSISTENT_NEEDINESS_GUILT_BIND",
+      "display_title": "Persistente Bedürftigkeit-Guilt-Bind",
+      "updated_at": "2025-08-19T03:16:06.095089Z"
+    },
+    "MEMA_ABSENCE_OF_THREAT_IN_CONFLICT": {
+      "id": "MEMA_ABSENCE_OF_THREAT_IN_CONFLICT",
+      "version": "3.3",
+      "lang": "de",
+      "frame": {
+        "signal": [
+          "Konflikt ohne Drohungen"
+        ],
+        "concept": "Omission: Threats fehlen",
+        "pragmatics": "Deeskalationsdisziplin",
+        "narrative": "controlled_deescalation"
+      },
+      "detect_class": "absence_meta",
+      "criteria": {
+        "target_set": "threat",
+        "window_messages": 30,
+        "min_E_hits": 3,
+        "strict_zero": true
+      },
+      "activation": {
+        "rule": "CONFLICT_WINDOW_END"
+      },
+      "window": {
+        "messages": 30
+      },
+      "scoring": {
+        "base": 2.2,
+        "weight": 0.6,
+        "decay": 0.0,
+        "formula": "linear"
+      },
+      "examples": [
+        "A: Ich bin richtig sauer.\nB: Verstehe, das war schlecht von mir.\nA: Ich will, dass wir das klären.\nB: Lass uns heute Abend ruhig reden.",
+        "A: Das nervt mich extrem.\nB: Okay, ich höre zu.\nA: Ich brauche eine Änderung.\nB: Vorschlag: wir teilen die Aufgaben neu.",
+        "A: So kann es nicht weitergehen.\nB: Stimmt, das war mein Fehler.\nA: Wie lösen wir das?\nB: Schritt eins: ich übernehme morgen den Part.",
+        "A: Ich bin verletzt.\nB: Danke, dass du es sagst.\nA: Bitte nimm das ernst.\nB: Ich nehme Verantwortung.",
+        "A: Ich fühle mich übergangen.\nB: Das wollte ich nicht.\nA: Was können wir konkret tun?\nB: Ich blocke mir dafür Zeit am Freitag."
+      ],
+      "tags": [
+        "mema",
+        "omission",
+        "deeskalation",
+        "positiv"
+      ],
+      "_id": "MEMA_ABSENCE_OF_THREAT_IN_CONFLICT",
+      "display_title": "Omission: Threats fehlen",
+      "updated_at": "2025-08-19T03:16:06.095078Z"
+    }
+  },
+  "validation": {
+    "leandeep33_compliant": false,
+    "validation_errors": [
+      "Duplicate id ATO_CARE_PING",
+      "Duplicate id CLU_NEEDINESS_GUILT_BIND",
+      "Duplicate id MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT",
+      "Duplicate id SEM_MAINTENANCE_RITUAL"
+    ]
+  }
+}

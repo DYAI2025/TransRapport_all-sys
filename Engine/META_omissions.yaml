@@ -1,0 +1,124 @@
+- id: MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Konflikt ohne Herabwürdigung"]
+    concept: "Omission: Derogation fehlt"
+    pragmatics: "Selbstregulation in eskalierbarer Lage"
+    narrative: "controlled_deescalation"
+  meta:
+    type: "absence"
+    target_absence_set: "derogation"
+  activation:
+    rule: "CONFLICT_WINDOW_END"   # ausgelöst vom Detector am Fensterende
+  window: { messages: 30 }
+  scoring: { base: 2.2, weight: 0.6, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv]
+
+- id: MEMA_ABSENCE_OF_THREAT_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Konflikt ohne Drohung"]
+    concept: "Omission: Threats fehlen"
+    pragmatics: "Deeskalationsdisziplin"
+    narrative: "controlled_deescalation"
+  meta: { type: "absence", target_absence_set: "threat" }
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 2.2, weight: 0.6, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv]
+
+- id: MEMA_ABSENCE_OF_ULTIMATUM_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Konflikt ohne Ultimatum"]
+    concept: "Omission: Ultimaten fehlen"
+    pragmatics: "Offenheit statt Zwang"
+    narrative: "controlled_deescalation"
+  meta: { type: "absence", target_absence_set: "ultimatum" }
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 2.0, weight: 0.55, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv]
+
+- id: MEMA_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Konflikt ohne Charakterangriff"]
+    concept: "Omission: Character Attacks fehlen"
+    pragmatics: "Sachbezug trotz Spannung"
+    narrative: "controlled_deescalation"
+  meta: { type: "absence", target_absence_set: "character_attack" }
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 2.0, weight: 0.55, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv]
+
+- id: MEMA_ABSENCE_OF_PROFANITY_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Konflikt ohne Beschimpfung"]
+    concept: "Omission: Profanity fehlt"
+    pragmatics: "Sprachliche Selbstkontrolle"
+    narrative: "controlled_deescalation"
+  meta: { type: "absence", target_absence_set: "profanity" }
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 1.8, weight: 0.5, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv]
+
+# Pro-Sprecher-Varianten (optional)
+- id: MEMA_SPKR_ABSENCE_OF_DEROGATION_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Sprecher bleibt ohne Herabwürdigung im Konflikt"]
+    concept: "Omission (Speaker): Derogation fehlt"
+    pragmatics: "Selbstregulation"
+    narrative: "controlled_deescalation"
+  meta:
+    type: "absence_per_speaker"
+    target_absence_set: "derogation"
+    min_participation_msgs: 2     # Sprecher war beteiligt, nicht nur still
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 1.6, weight: 0.45, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv, per_speaker]
+
+- id: MEMA_SPKR_ABSENCE_OF_THREAT_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Sprecher bleibt ohne Drohung im Konflikt"]
+    concept: "Omission (Speaker): Threats fehlen"
+    pragmatics: "Deeskalationsdisziplin per Person"
+    narrative: "controlled_deescalation"
+  meta:
+    type: "absence_per_speaker"
+    target_absence_set: "threat"
+    min_participation_msgs: 2
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 1.6, weight: 0.45, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv, per_speaker]
+
+- id: MEMA_SPKR_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT
+  version: "3.3"
+  lang: de
+  frame:
+    signal: ["Sprecher bleibt ohne Charakterangriff im Konflikt"]
+    concept: "Omission (Speaker): Character Attacks fehlen"
+    pragmatics: "Sachbezug trotz persönlicher Spannung"
+    narrative: "controlled_deescalation"
+  meta:
+    type: "absence_per_speaker"
+    target_absence_set: "character_attack"
+    min_participation_msgs: 2
+  activation: { rule: "CONFLICT_WINDOW_END" }
+  window: { messages: 30 }
+  scoring: { base: 1.4, weight: 0.4, decay: 0.0, formula: "linear" }
+  tags: [mema, omission, Deeskalation, positiv, per_speaker]

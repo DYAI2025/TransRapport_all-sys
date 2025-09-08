@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "config_type": "LeanDeep_3.3_Sets_Configuration",
+    "generated_at": "2025-08-19T03:16:06.101144",
+    "version": "3.3.0"
+  },
+  "version": "3.3",
+  "resolve_order": [
+    "marker_to_class",
+    "tag_to_class"
+  ],
+  "marker_sets": {
+    "neediness_guilt_bind": [
+      "CLU_REASSURANCE_SEEKING_LOOP",
+      "CLU_NEEDINESS_GUILT_BIND"
+    ],
+    "maintenance_bonding": [
+      "ATO_CARE_PING",
+      "ATO_STATUS_PING",
+      "SEM_MAINTENANCE_RITUAL"
+    ],
+    "defensive_structures": [
+      "ATO_DISCLAIMER_NOT_BURDEN",
+      "ATO_MORAL_GOOD_INTENT",
+      "SEM_DOUBLE_BIND_DISCLAIMER_BUT",
+      "SEM_MORAL_REFRAMING_GOOD_INTENT"
+    ],
+    "conflict_patterns": [
+      "ATO_COLD_LABEL",
+      "ATO_YOUR_FAULT_PHRASE",
+      "SEM_VICTIM_OFFENDER_REVERSAL"
+    ],
+    "boundary_dynamic": [
+      "ATO_BOUNDARY_NEGOTIATION",
+      "ATO_HELPLESSNESS_DEPENDENCY",
+      "SEM_PERFORMATIVE_HELPLESSNESS"
+    ],
+    "guilt_appeal_patterns": [
+      "ATO_GUILT_APPEAL_SUPPORT",
+      "SEM_GUILT_APPEAL_NEEDINESS"
+    ]
+  },
+  "conflict_gating": {
+    "window": {
+      "messages": 30
+    },
+    "min_E_hits": 3
+  }
+}
