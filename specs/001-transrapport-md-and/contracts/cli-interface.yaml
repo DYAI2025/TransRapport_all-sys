@@ -1,0 +1,299 @@
+openapi: 3.0.0
+info:
+  title: TransRapport Documentation CLI Interface
+  version: 1.0.0
+  description: CLI contract for documentation validation and cross-reference management
+
+# CLI Commands as pseudo-REST endpoints for contract definition
+paths:
+  /cli/docs/validate:
+    post:
+      summary: Validate documentation consistency
+      description: "CLI: me docs validate [--strict] [--format json|text]"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                strict:
+                  type: boolean
+                  description: Enable strict validation mode
+                  default: false
+                format:
+                  type: string
+                  enum: [json, text]
+                  default: text
+                files:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific files to validate (optional)
+      responses:
+        200:
+          description: Validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+            text/plain:
+              schema:
+                type: string
+                description: Human-readable validation report
+        400:
+          description: Invalid arguments or file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /cli/docs/cross-ref:
+    get:
+      summary: Check cross-references
+      description: "CLI: me docs cross-ref [--term TERM] [--file FILE] [--format json|text]"
+      parameters:
+        - name: term
+          in: query
+          schema:
+            type: string
+          description: Specific term to check references for
+        - name: file
+          in: query
+          schema:
+            type: string
+          description: Specific file to check references in
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, text]
+            default: text
+      responses:
+        200:
+          description: Cross-reference check completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrossReferenceResponse'
+            text/plain:
+              schema:
+                type: string
+                description: Human-readable cross-reference report
+
+  /cli/docs/status:
+    get:
+      summary: Get documentation status
+      description: "CLI: me docs status [--format json|text]"
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, text]
+            default: text
+      responses:
+        200:
+          description: Documentation status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+            text/plain:
+              schema:
+                type: string
+                description: Human-readable status report
+
+components:
+  schemas:
+    ValidationResponse:
+      type: object
+      required:
+        - success
+        - file_count
+        - issues
+      properties:
+        success:
+          type: boolean
+          description: Whether validation passed overall
+        file_count:
+          type: integer
+          description: Number of files validated
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationIssue'
+        summary:
+          type: object
+          properties:
+            errors:
+              type: integer
+            warnings:
+              type: integer
+            info:
+              type: integer
+
+    ValidationIssue:
+      type: object
+      required:
+        - file
+        - rule
+        - severity
+        - message
+      properties:
+        file:
+          type: string
+          description: Path to file with issue
+        rule:
+          type: string
+          description: Validation rule that failed
+        severity:
+          type: string
+          enum: [error, warning, info]
+        line:
+          type: integer
+          description: Line number where issue occurs
+        message:
+          type: string
+          description: Human-readable issue description
+        suggestion:
+          type: string
+          description: Suggested fix for the issue
+
+    CrossReferenceResponse:
+      type: object
+      required:
+        - term_count
+        - references
+      properties:
+        term_count:
+          type: integer
+          description: Number of terms checked
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/CrossReference'
+        broken_links:
+          type: array
+          items:
+            $ref: '#/components/schemas/BrokenLink'
+
+    CrossReference:
+      type: object
+      required:
+        - term
+        - file
+        - line
+        - context
+        - valid
+      properties:
+        term:
+          type: string
+          description: Referenced term
+        file:
+          type: string
+          description: File containing reference
+        line:
+          type: integer
+          description: Line number of reference
+        context:
+          type: string
+          description: Surrounding text context
+        valid:
+          type: boolean
+          description: Whether reference is valid
+        reference_type:
+          type: string
+          enum: [definition, usage, link]
+
+    BrokenLink:
+      type: object
+      required:
+        - file
+        - line
+        - link
+        - target
+      properties:
+        file:
+          type: string
+        line:
+          type: integer
+        link:
+          type: string
+          description: The broken link text
+        target:
+          type: string
+          description: Intended target that could not be found
+
+    StatusResponse:
+      type: object
+      required:
+        - files
+        - last_validation
+        - overall_status
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileStatus'
+        last_validation:
+          type: string
+          format: date-time
+          description: When validation was last run
+        overall_status:
+          type: string
+          enum: [valid, invalid, not_validated]
+        statistics:
+          type: object
+          properties:
+            total_terms:
+              type: integer
+            total_references:
+              type: integer
+            broken_references:
+              type: integer
+
+    FileStatus:
+      type: object
+      required:
+        - path
+        - name
+        - status
+        - last_modified
+      properties:
+        path:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [valid, invalid, not_validated]
+        last_modified:
+          type: string
+          format: date-time
+        last_validated:
+          type: string
+          format: date-time
+        issue_count:
+          type: object
+          properties:
+            errors:
+              type: integer
+            warnings:
+              type: integer
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional error details
