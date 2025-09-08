@@ -1,0 +1,5 @@
+# Production requirements for TransRapport Doc Validator
+# Core dependencies only - minimal production footprint
+click==8.1.6
+PyYAML==6.0.1
+regex
