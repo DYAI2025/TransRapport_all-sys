@@ -1,0 +1,23 @@
+# Python / Node / build junk
+.venv/
+node_modules/
+dist/
+__pycache__/
+*.log
+
+# App runtime & artifacts (no PII in repo)
+runtime/
+exports/
+sessions/
+artifacts/
+*.db
+*.sqlite
+*.sqlite3
+# Models/binaries go elsewhere (tracked via README)
+models/
+*.gguf
+*.bin
+*.onnx
+*.wav
+*.mp3
+*.pdf
