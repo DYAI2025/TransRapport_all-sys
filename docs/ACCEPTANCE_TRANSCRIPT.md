@@ -1,0 +1,11 @@
+# v0.1.0-pilot · 10-Minuten-Abnahme (Airplane Mode)
+- LD-3.4 framework confirmed → OK
+- Network verification: zero connections → OK
+- Audio device enumeration → OK
+- Transcription (mock or offline model) → OK
+- Diarization (speaker separation) → OK
+- Constitutional analysis (ATO→SEM→CLU→MEMA) → OK
+- Exports (PDF, CSV) → OK
+- UI buttons mapped to CLI (shell-only) → OK
+- Golden tests passing → OK
+- Privacy compliance: offline only, CSP connect-src 'none' → OK
