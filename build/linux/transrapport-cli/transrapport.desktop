@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TransRapport
+Comment=Offline Constitutional Analysis Tool
+Exec=transrapport
+Icon=transrapport
+Terminal=false
+Categories=Office;AudioVideo;
+Keywords=transcription;analysis;constitutional;LD-3.4;
+StartupWMClass=TransRapport

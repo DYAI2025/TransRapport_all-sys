@@ -1,0 +1,80 @@
+{
+  "version": "0.1.0-pilot",
+  "constitutional_framework": "LD-3.4",
+  "expected_commands": {
+    "status": {
+      "exit_code": 0,
+      "contains": [
+        "TransRapport Status",
+        "LD-3.4",
+        "Constitutional Framework"
+      ]
+    },
+    "audio_devices": {
+      "exit_code": 0,
+      "json_format": true,
+      "required_fields": ["devices"],
+      "device_fields": ["id", "name", "is_default"]
+    },
+    "transcribe_mock": {
+      "exit_code": 0,
+      "json_format": true,
+      "required_fields": ["text", "language", "duration", "segments"],
+      "segment_fields": ["id", "start", "end", "text", "confidence"]
+    },
+    "diarize_mock": {
+      "exit_code": 0,
+      "json_format": true,
+      "required_fields": ["speakers", "segments", "diarization_info"],
+      "speaker_fields": ["id", "label", "speaking_time", "segment_count", "average_confidence"],
+      "segment_fields": ["id", "start", "end", "speaker", "text", "confidence", "duration"]
+    },
+    "analyze_mock": {
+      "exit_code": 0,
+      "json_format": true,
+      "required_fields": ["events"],
+      "event_fields": ["id", "marker_type", "marker_subtype", "start_time", "end_time", "confidence", "evidence", "speaker"],
+      "marker_types": ["ATO", "SEM", "CLU", "MEMA"]
+    },
+    "view_events": {
+      "exit_code": 0,
+      "json_format": true,
+      "levels": ["ato", "sem", "clu", "mema"],
+      "required_fields": ["events"],
+      "event_fields": ["id", "marker_type", "marker_subtype", "start_time", "end_time", "confidence", "evidence", "speaker"]
+    },
+    "export_formats": {
+      "report": ["pdf"],
+      "data": ["json", "csv", "analytics"]
+    }
+  },
+  "frozen_markers": {
+    "ATO": {
+      "enabled": true,
+      "subtypes": ["question_open", "choice_offering", "permission_seeking"]
+    },
+    "SEM": {
+      "enabled": true,
+      "subtypes": ["empathy_expression", "validation", "understanding_check"]
+    },
+    "CLU": {
+      "enabled": true,
+      "subtypes": ["shared_experience", "similarity_acknowledgment", "group_identity"]
+    },
+    "MEMA": {
+      "enabled": true,
+      "subtypes": ["reference_recall", "context_building", "assumption_check"]
+    }
+  },
+  "frozen_defaults": {
+    "confidence_threshold": 0.75,
+    "default_window_sem": "ANY 2 IN 3",
+    "default_window_clu": "AT_LEAST 1 IN 5",
+    "min_duration_threshold": 1.5,
+    "default_whisper_model": "base",
+    "default_language": "de",
+    "default_audio_format": "wav",
+    "default_sample_rate": 16000,
+    "default_report_format": "pdf"
+  }
+}
