@@ -1,0 +1,493 @@
+openapi: 3.0.3
+info:
+  title: Transcription Library Interface
+  description: Contract for speech recognition and speaker diarization using WhisperX
+  version: 1.0.0
+  contact:
+    name: TransRapport Team
+  license:
+    name: CC BY-NC-SA 4.0
+
+components:
+  schemas:
+    TranscriptionRequest:
+      type: object
+      required: [sessionId, audioFilePath, settings]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        audioFilePath:
+          type: string
+        settings:
+          $ref: '#/components/schemas/TranscriptionSettings'
+        language:
+          type: string
+          enum: [de, en, auto]
+          default: auto
+
+    TranscriptionSettings:
+      type: object
+      properties:
+        model:
+          type: string
+          enum: [large-v3, large-v2, medium, small, base]
+          default: large-v3
+        computeType:
+          type: string
+          enum: [float32, float16, int8]
+          default: float16
+        batchSize:
+          type: integer
+          default: 16
+        enableDiarization:
+          type: boolean
+          default: true
+        minSpeakers:
+          type: integer
+          default: 1
+          minimum: 1
+        maxSpeakers:
+          type: integer
+          default: 3
+          minimum: 1
+          maximum: 10
+        wordTimestamps:
+          type: boolean
+          default: true
+        highlightWords:
+          type: boolean
+          default: false
+
+    Transcript:
+      type: object
+      required: [id, sessionId, text, language, confidence, segments, wordCount, speakerCount, status, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        text:
+          type: string
+        language:
+          type: string
+        confidence:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptSegment'
+        editHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/EditEvent'
+        wordCount:
+          type: integer
+          minimum: 0
+        speakerCount:
+          type: integer
+          minimum: 1
+        processingTime:
+          type: number
+          minimum: 0
+        asrModel:
+          type: string
+        status:
+          type: string
+          enum: [pending, processing, completed, failed, edited]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    TranscriptSegment:
+      type: object
+      required: [id, startTime, endTime, text, speakerId, confidence]
+      properties:
+        id:
+          type: string
+          format: uuid
+        startTime:
+          type: number
+          minimum: 0
+        endTime:
+          type: number
+          minimum: 0
+        text:
+          type: string
+        speakerId:
+          type: string
+        confidence:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/WordTimestamp'
+
+    WordTimestamp:
+      type: object
+      required: [word, startTime, endTime, confidence]
+      properties:
+        word:
+          type: string
+        startTime:
+          type: number
+        endTime:
+          type: number
+        confidence:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+
+    EditEvent:
+      type: object
+      required: [id, timestamp, type, oldValue, newValue, position, userId]
+      properties:
+        id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum: [insert, delete, modify, speaker_change]
+        oldValue:
+          type: string
+        newValue:
+          type: string
+        position:
+          type: integer
+          minimum: 0
+        userId:
+          type: string
+          default: "user"
+
+    SpeakerProfile:
+      type: object
+      required: [id, sessionId, label, role, speakingTime, segmentCount, averageConfidence, isActive, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        label:
+          type: string
+          minLength: 1
+          maxLength: 50
+        role:
+          type: string
+          enum: [professional, client, other, unknown]
+        voiceCharacteristics:
+          $ref: '#/components/schemas/VoiceProfile'
+        speakingTime:
+          type: number
+          minimum: 0
+        segmentCount:
+          type: integer
+          minimum: 0
+        averageConfidence:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+        manualCorrections:
+          type: integer
+          minimum: 0
+          default: 0
+        isActive:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    VoiceProfile:
+      type: object
+      properties:
+        fundamentalFrequency:
+          type: number
+          nullable: true
+        spectralCentroid:
+          type: number
+          nullable: true
+        energyLevel:
+          type: number
+          nullable: true
+        speakingRate:
+          type: number
+          nullable: true
+        pauseFrequency:
+          type: number
+          nullable: true
+        embeddings:
+          type: array
+          items:
+            type: number
+          nullable: true
+
+    TranscriptionProgress:
+      type: object
+      required: [status, progress, currentStep]
+      properties:
+        status:
+          type: string
+          enum: [pending, loading_model, transcribing, diarizing, completed, failed]
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        currentStep:
+          type: string
+        timeRemaining:
+          type: number
+          nullable: true
+        processedDuration:
+          type: number
+          minimum: 0
+        totalDuration:
+          type: number
+          minimum: 0
+        error:
+          type: string
+          nullable: true
+
+    SpeakerUpdate:
+      type: object
+      required: [speakerId]
+      properties:
+        speakerId:
+          type: string
+        label:
+          type: string
+          minLength: 1
+          maxLength: 50
+        role:
+          type: string
+          enum: [professional, client, other, unknown]
+        notes:
+          type: string
+          nullable: true
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+paths:
+  /transcription/start:
+    post:
+      summary: Start transcription process
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranscriptionRequest'
+      responses:
+        '202':
+          description: Transcription started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transcriptionId:
+                    type: string
+                    format: uuid
+                  status:
+                    $ref: '#/components/schemas/TranscriptionProgress'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /transcription/status:
+    get:
+      summary: Get transcription progress
+      parameters:
+        - name: transcriptionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Transcription progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptionProgress'
+
+  /transcription/result:
+    get:
+      summary: Get completed transcription
+      parameters:
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Completed transcription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transcript'
+        '404':
+          description: Transcription not found
+
+  /transcription/edit:
+    post:
+      summary: Apply manual edit to transcript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sessionId, segmentId, newText]
+              properties:
+                sessionId:
+                  type: string
+                  format: uuid
+                segmentId:
+                  type: string
+                  format: uuid
+                newText:
+                  type: string
+                position:
+                  type: integer
+                  minimum: 0
+      responses:
+        '200':
+          description: Edit applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptSegment'
+
+  /speakers:
+    get:
+      summary: Get speaker profiles for session
+      parameters:
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Speaker profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpeakerProfile'
+
+  /speakers/update:
+    put:
+      summary: Update speaker profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpeakerUpdate'
+      responses:
+        '200':
+          description: Speaker updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerProfile'
+
+  /speakers/merge:
+    post:
+      summary: Merge two speaker profiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sessionId, primarySpeakerId, secondarySpeakerId]
+              properties:
+                sessionId:
+                  type: string
+                  format: uuid
+                primarySpeakerId:
+                  type: string
+                secondarySpeakerId:
+                  type: string
+      responses:
+        '200':
+          description: Speakers merged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerProfile'
+
+  /models/available:
+    get:
+      summary: List available transcription models
+      responses:
+        '200':
+          description: Available models
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    size:
+                      type: string
+                    languages:
+                      type: array
+                      items:
+                        type: string
+                    downloaded:
+                      type: boolean
+                    downloadSize:
+                      type: integer
+
+tags:
+  - name: Transcription
+    description: Speech recognition and transcription operations
+  - name: Speakers
+    description: Speaker diarization and profile management
+  - name: Models
+    description: ASR model management

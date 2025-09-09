@@ -1,0 +1,36 @@
+{
+  "platform": "linux",
+  "certificate_source": "local_certificate",
+  "gpg_config": {
+    "key_id": "${GPG_KEY_ID}",
+    "private_key_path": "${GPG_PRIVATE_KEY_PATH}",
+    "public_key_path": "certs/linux/transrapport.asc",
+    "passphrase": "${GPG_PASSPHRASE}"
+  },
+  "signing_config": {
+    "algorithm": "RSA4096",
+    "digest": "SHA256",
+    "armor_output": true,
+    "detach_signature": true
+  },
+  "package_signing": {
+    "deb": {
+      "sign_method": "dpkg-sig",
+      "key_type": "origin"
+    },
+    "rpm": {
+      "sign_method": "rpm",
+      "key_type": "gpg"
+    },
+    "appimage": {
+      "sign_method": "gpg",
+      "embed_signature": false
+    }
+  },
+  "validation": {
+    "verify_signature": true,
+    "check_key_expiration": true,
+    "verify_key_trust": false,
+    "require_key_fingerprint": true
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "export_timestamp": "2025-09-09T04:33:10.297425",
+    "constitutional_source": "LD-3.4-constitution",
+    "marker_count": 1,
+    "rapport_indicator_count": 0,
+    "export_config": {
+      "include_relationships": true,
+      "include_evidence": true,
+      "include_explanations": true,
+      "group_by_type": false,
+      "anonymize_speakers": false
+    },
+    "analysis_metadata": {
+      "conversation_name": "demo",
+      "conversation_id": "edff3e4f-52ac-4f46-83bf-c3b133a6f69e",
+      "export_level": "all",
+      "constitutional_source": "LD-3.4-constitution",
+      "total_markers": 1
+    }
+  },
+  "markers": [
+    {
+      "id": "2f47b6c9-d40e-449a-92af-c2f29114c123",
+      "marker_type": "CLU",
+      "marker_subtype": "cluster_formation",
+      "start_time": 15.5,
+      "end_time": 22.0,
+      "confidence": 0.7275,
+      "speaker": "Speaker_2",
+      "constitutional_source": "LD-3.4-constitution",
+      "analysis_method": "LD-3.4",
+      "evidence": "So we both agree that the revenue targets are achievable within this timeframe",
+      "explanation": "Speakers forming collective understanding or shared perspective involving 2 speakers",
+      "related_marker_ids": []
+    }
+  ]
+}

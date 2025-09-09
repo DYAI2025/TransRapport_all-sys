@@ -1,0 +1,29 @@
+{
+  "platform": "macos",
+  "certificate_source": "apple_developer",
+  "apple_config": {
+    "signing_identity": "${APPLE_SIGNING_IDENTITY}",
+    "team_id": "${APPLE_TEAM_ID}",
+    "certificate_path": "${APPLE_CERTIFICATE_PATH}",
+    "certificate_password": "${APPLE_CERTIFICATE_PASSWORD}"
+  },
+  "signing_config": {
+    "application_cert": "Developer ID Application",
+    "installer_cert": "Developer ID Installer", 
+    "entitlements_path": "entitlements.plist",
+    "enable_hardened_runtime": true,
+    "enable_notarization": true
+  },
+  "notarization": {
+    "apple_id": "${APPLE_ID}",
+    "app_specific_password": "${APPLE_APP_PASSWORD}",
+    "team_id": "${APPLE_TEAM_ID}",
+    "wait_for_completion": true
+  },
+  "validation": {
+    "verify_signature": true,
+    "verify_notarization": true,
+    "check_gatekeeper": true,
+    "verify_entitlements": true
+  }
+}

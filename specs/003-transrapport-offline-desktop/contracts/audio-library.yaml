@@ -1,0 +1,359 @@
+openapi: 3.0.3
+info:
+  title: Audio Library Interface
+  description: Contract for audio capture, import, and processing in TransRapport desktop application
+  version: 1.0.0
+  contact:
+    name: TransRapport Team
+  license:
+    name: CC BY-NC-SA 4.0
+
+components:
+  schemas:
+    AudioRecording:
+      type: object
+      required: [id, sessionId, filePath, fileName, fileSize, format, sampleRate, channels, duration, source, encrypted, checksum, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        filePath:
+          type: string
+          description: Local file system path
+        fileName:
+          type: string
+        fileSize:
+          type: integer
+          minimum: 1
+        format:
+          type: string
+          enum: [wav, mp3, m4a, flac, ogg]
+        sampleRate:
+          type: integer
+          minimum: 8000
+          maximum: 48000
+        channels:
+          type: integer
+          enum: [1, 2]
+        bitDepth:
+          type: integer
+          nullable: true
+        duration:
+          type: number
+          minimum: 0.1
+        quality:
+          type: string
+          enum: [poor, fair, good, excellent]
+        source:
+          type: string
+          enum: [microphone, system_audio, imported_file, mixed]
+        encrypted:
+          type: boolean
+        checksum:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        createdAt:
+          type: string
+          format: date-time
+
+    RecordingSession:
+      type: object
+      required: [sessionId, isRecording, startTime, settings]
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        isRecording:
+          type: boolean
+        startTime:
+          type: string
+          format: date-time
+        currentDuration:
+          type: number
+          minimum: 0
+        settings:
+          $ref: '#/components/schemas/RecordingSettings'
+        inputDevices:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudioDevice'
+
+    RecordingSettings:
+      type: object
+      properties:
+        sampleRate:
+          type: integer
+          default: 16000
+          enum: [16000, 22050, 44100, 48000]
+        channels:
+          type: integer
+          default: 1
+          enum: [1, 2]
+        bitDepth:
+          type: integer
+          default: 16
+          enum: [16, 24, 32]
+        format:
+          type: string
+          default: wav
+          enum: [wav, mp3, m4a, flac]
+        quality:
+          type: string
+          default: good
+          enum: [poor, fair, good, excellent]
+        autoStop:
+          type: boolean
+          default: false
+        maxDuration:
+          type: integer
+          default: 7200
+          description: Maximum recording duration in seconds
+
+    AudioDevice:
+      type: object
+      required: [id, name, type, isDefault]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum: [microphone, system_audio, line_in]
+        isDefault:
+          type: boolean
+        sampleRate:
+          type: integer
+        channels:
+          type: integer
+
+    ImportRequest:
+      type: object
+      required: [filePath, sessionId]
+      properties:
+        filePath:
+          type: string
+        sessionId:
+          type: string
+          format: uuid
+        targetFormat:
+          type: string
+          enum: [wav, mp3, m4a, flac]
+          default: wav
+        normalize:
+          type: boolean
+          default: false
+        encrypt:
+          type: boolean
+          default: true
+
+    ProcessingStatus:
+      type: object
+      required: [status, progress]
+      properties:
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        message:
+          type: string
+        error:
+          type: string
+          nullable: true
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+paths:
+  /audio/devices:
+    get:
+      summary: List available audio input devices
+      responses:
+        '200':
+          description: Available audio devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AudioDevice'
+
+  /audio/recording/start:
+    post:
+      summary: Start audio recording
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sessionId, settings]
+              properties:
+                sessionId:
+                  type: string
+                  format: uuid
+                settings:
+                  $ref: '#/components/schemas/RecordingSettings'
+                deviceIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Recording started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingSession'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /audio/recording/stop:
+    post:
+      summary: Stop audio recording
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sessionId]
+              properties:
+                sessionId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Recording stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioRecording'
+        '404':
+          description: Recording session not found
+
+  /audio/recording/status:
+    get:
+      summary: Get current recording status
+      parameters:
+        - name: sessionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Recording status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingSession'
+
+  /audio/import:
+    post:
+      summary: Import audio file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportRequest'
+      responses:
+        '202':
+          description: Import started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  importId:
+                    type: string
+                    format: uuid
+                  status:
+                    $ref: '#/components/schemas/ProcessingStatus'
+        '400':
+          description: Invalid file or request
+
+  /audio/import/status:
+    get:
+      summary: Get import processing status
+      parameters:
+        - name: importId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Import status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessingStatus'
+
+  /audio/validate:
+    post:
+      summary: Validate audio file integrity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [filePath]
+              properties:
+                filePath:
+                  type: string
+                expectedChecksum:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  checksum:
+                    type: string
+                  metadata:
+                    type: object
+                    properties:
+                      duration:
+                        type: number
+                      sampleRate:
+                        type: integer
+                      channels:
+                        type: integer
+                      format:
+                        type: string
+
+tags:
+  - name: Audio
+    description: Audio recording and import operations

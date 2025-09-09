@@ -1,0 +1,7 @@
+# TransRapport Constitutional Marker Export
+# Generated: 2025-09-09T04:33:10.297672
+# Constitutional Source: LD-3.4-constitution
+# Total Markers: 1
+#
+id,marker_type,marker_subtype,start_time,end_time,confidence,speaker,constitutional_source,analysis_method,evidence,explanation,related_marker_ids,relationship_count,duration_seconds,marker_density
+2f47b6c9-d40e-449a-92af-c2f29114c123,CLU,cluster_formation,15.5,22.0,0.7275,Speaker_2,LD-3.4-constitution,LD-3.4,So we both agree that the revenue targets are achievable within this timeframe,Speakers forming collective understanding or shared perspective involving 2 speakers,,0,6.5,1.0

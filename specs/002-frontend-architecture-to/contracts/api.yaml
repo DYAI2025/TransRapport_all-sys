@@ -1,0 +1,665 @@
+openapi: 3.0.3
+info:
+  title: TransRapport Frontend API
+  description: API contract for TransRapport frontend-backend communication
+  version: 1.0.0
+  contact:
+    name: TransRapport Team
+  license:
+    name: CC BY-NC-SA 4.0
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+  - url: ws://localhost:8000
+    description: WebSocket server
+
+paths:
+  /api/v1/projects:
+    get:
+      summary: List user's documentation projects
+      tags: [Projects]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentationProject'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+    post:
+      summary: Create new documentation project
+      tags: [Projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, rootPath]
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                rootPath:
+                  type: string
+                settings:
+                  $ref: '#/components/schemas/ValidationSettings'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentationProject'
+        '400':
+          description: Invalid project data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/projects/{projectId}:
+    get:
+      summary: Get project details
+      tags: [Projects]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentationProject'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update project settings
+      tags: [Projects]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                settings:
+                  $ref: '#/components/schemas/ValidationSettings'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentationProject'
+
+    delete:
+      summary: Delete project
+      tags: [Projects]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Project deleted
+        '404':
+          description: Project not found
+
+  /api/v1/projects/{projectId}/validate:
+    post:
+      summary: Start validation for project
+      tags: [Validation]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settings:
+                  $ref: '#/components/schemas/ValidationSettings'
+                files:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific files to validate (optional)
+      responses:
+        '202':
+          description: Validation started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSession'
+        '400':
+          description: Invalid validation request
+        '404':
+          description: Project not found
+
+  /api/v1/sessions:
+    get:
+      summary: List validation sessions
+      tags: [Sessions]
+      parameters:
+        - name: projectId
+          in: query
+          schema:
+            type: string
+          description: Filter by project
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/SessionStatus'
+          description: Filter by status
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationSession'
+                  total:
+                    type: integer
+
+  /api/v1/sessions/{sessionId}:
+    get:
+      summary: Get session details
+      tags: [Sessions]
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSession'
+        '404':
+          description: Session not found
+
+    delete:
+      summary: Cancel/delete session
+      tags: [Sessions]
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Session cancelled
+        '404':
+          description: Session not found
+
+  /api/v1/sessions/{sessionId}/results:
+    get:
+      summary: Get validation results for session
+      tags: [Results]
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: severity
+          in: query
+          schema:
+            $ref: '#/components/schemas/ResultSeverity'
+          description: Filter by severity
+        - name: file
+          in: query
+          schema:
+            type: string
+          description: Filter by file path
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Validation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationResult'
+                  total:
+                    type: integer
+                  summary:
+                    type: object
+                    properties:
+                      errors:
+                        type: integer
+                      warnings:
+                        type: integer
+                      info:
+                        type: integer
+
+  /api/v1/sessions/{sessionId}/export:
+    post:
+      summary: Export validation results
+      tags: [Export]
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [format]
+              properties:
+                format:
+                  $ref: '#/components/schemas/ExportFormat'
+                includeOutput:
+                  type: boolean
+                  default: false
+                fileName:
+                  type: string
+      responses:
+        '202':
+          description: Export started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportReport'
+        '404':
+          description: Session not found
+
+  /api/v1/exports/{exportId}:
+    get:
+      summary: Get export status
+      tags: [Export]
+      parameters:
+        - name: exportId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Export details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportReport'
+
+  /api/v1/exports/{exportId}/download:
+    get:
+      summary: Download export file
+      tags: [Export]
+      parameters:
+        - name: exportId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Export file
+          content:
+            application/json: {}
+            text/html: {}
+            application/pdf: {}
+        '404':
+          description: Export not found or expired
+
+  /ws/{userId}:
+    get:
+      summary: WebSocket endpoint for real-time updates
+      tags: [WebSocket]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '101':
+          description: WebSocket connection established
+        '400':
+          description: Invalid WebSocket request
+
+components:
+  schemas:
+    DocumentationProject:
+      type: object
+      required: [id, name, rootPath, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        rootPath:
+          type: string
+        lastValidated:
+          type: string
+          format: date-time
+          nullable: true
+        fileCount:
+          type: integer
+          minimum: 0
+        validationStatus:
+          $ref: '#/components/schemas/ProjectStatus'
+        settings:
+          $ref: '#/components/schemas/ValidationSettings'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ValidationSession:
+      type: object
+      required: [id, status, command, workingDirectory, startedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/SessionStatus'
+        command:
+          type: string
+        workingDirectory:
+          type: string
+        settings:
+          $ref: '#/components/schemas/ValidationSettings'
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        progress:
+          $ref: '#/components/schemas/SessionProgress'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+        output:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutputLine'
+
+    ValidationResult:
+      type: object
+      required: [id, sessionId, file, rule, severity, message, suggestion, validatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        file:
+          type: string
+        rule:
+          type: string
+        severity:
+          $ref: '#/components/schemas/ResultSeverity'
+        lineNumber:
+          type: integer
+          minimum: 1
+          nullable: true
+        message:
+          type: string
+        suggestion:
+          type: string
+        validatedAt:
+          type: string
+          format: date-time
+        context:
+          type: string
+          nullable: true
+
+    ExportReport:
+      type: object
+      required: [id, sessionId, format, status, createdAt, expiresAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        format:
+          $ref: '#/components/schemas/ExportFormat'
+        fileName:
+          type: string
+        size:
+          type: integer
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        downloadCount:
+          type: integer
+          minimum: 0
+        status:
+          $ref: '#/components/schemas/ExportStatus'
+
+    ValidationSettings:
+      type: object
+      properties:
+        strict:
+          type: boolean
+          default: false
+        format:
+          type: string
+          enum: [json, text]
+          default: json
+        filePatterns:
+          type: array
+          items:
+            type: string
+          default: ["**/*.md"]
+        excludePatterns:
+          type: array
+          items:
+            type: string
+          default: []
+        timeoutSeconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+          default: 300
+        maxFileSize:
+          type: integer
+          minimum: 1
+          default: 10485760
+
+    SessionProgress:
+      type: object
+      properties:
+        stage:
+          type: string
+        percentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        currentFile:
+          type: string
+          nullable: true
+        totalFiles:
+          type: integer
+          minimum: 0
+          nullable: true
+        processedFiles:
+          type: integer
+          minimum: 0
+        errorsFound:
+          type: integer
+          minimum: 0
+        warningsFound:
+          type: integer
+          minimum: 0
+
+    OutputLine:
+      type: object
+      required: [timestamp, stream, content, lineNumber]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        stream:
+          type: string
+          enum: [stdout, stderr]
+        content:
+          type: string
+        lineNumber:
+          type: integer
+          minimum: 1
+
+    SessionStatus:
+      type: string
+      enum: [idle, running, paused, completed, failed, cancelled]
+
+    ProjectStatus:
+      type: string
+      enum: [unknown, valid, warnings, errors, processing]
+
+    ResultSeverity:
+      type: string
+      enum: [error, warning, info]
+
+    ExportFormat:
+      type: string
+      enum: [json, html, pdf]
+
+    ExportStatus:
+      type: string
+      enum: [generating, ready, failed, expired]
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+security:
+  - ApiKey: []
+
+tags:
+  - name: Projects
+    description: Documentation project management
+  - name: Validation
+    description: Validation operations
+  - name: Sessions
+    description: Validation session management
+  - name: Results
+    description: Validation results and analysis
+  - name: Export
+    description: Export and reporting
+  - name: WebSocket
+    description: Real-time communication

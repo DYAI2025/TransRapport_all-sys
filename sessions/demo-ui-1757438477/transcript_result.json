@@ -1,0 +1,24 @@
+{
+  "conversation_id": "demo-ui-1757438477",
+  "text": "This is a mock transcription for testing purposes. The actual Whisper model is not available.",
+  "language": "de",
+  "duration": 6.0,
+  "segments": [
+    {
+      "id": "0",
+      "start": 0.0,
+      "end": 3.0,
+      "text": "This is a mock transcription for testing purposes.",
+      "confidence": 0.95
+    },
+    {
+      "id": "1",
+      "start": 3.0,
+      "end": 6.0,
+      "text": "The actual Whisper model is not available.",
+      "confidence": 0.92
+    }
+  ],
+  "model": "base",
+  "audio_file": "sessions/demo-ui-1757438477/raw.wav"
+}

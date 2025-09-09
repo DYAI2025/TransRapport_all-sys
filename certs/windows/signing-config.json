@@ -1,0 +1,22 @@
+{
+  "platform": "windows",
+  "certificate_source": "azure_key_vault",
+  "azure_config": {
+    "vault_url": "${AZURE_KEY_VAULT_URL}",
+    "certificate_name": "${AZURE_CERTIFICATE_NAME}",
+    "client_id": "${AZURE_CLIENT_ID}",
+    "tenant_id": "${AZURE_TENANT_ID}"
+  },
+  "signing_config": {
+    "digest_algorithm": "sha256",
+    "timestamp_server": "http://timestamp.digicert.com",
+    "enable_tsp": false,
+    "description": "TransRapport - Offline Desktop Transcription Application"
+  },
+  "validation": {
+    "verify_signature": true,
+    "verify_timestamp": true,
+    "verify_certificate_chain": true,
+    "require_ev_certificate": true
+  }
+}

@@ -1,16 +1,14 @@
 {
   "productName": "TransRapport",
-  "version": "1.0.0",
+  "version": "0.1.0-pilot",
   "identifier": "com.transrapport.desktop",
   "build": {
     "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:5173",
     "frontendDist": "../dist"
   },
   "app": {
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; connect-src 'none'; img-src 'self' data:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'"
     },
     "windows": [
       {
@@ -92,7 +90,15 @@
   },
   "plugins": {
     "shell": {
-      "open": true
+      "open": true,
+      "scope": [
+        {
+          "name": "me",
+          "cmd": "python3",
+          "args": ["../me.py", "$ARGS"],
+          "sidecar": false
+        }
+      ]
     },
     "fs": {
       "all": true,
@@ -100,12 +106,6 @@
     },
     "dialog": {
       "all": true
-    },
-    "process": {
-      "all": false,
-      "exit": true,
-      "relaunch": true,
-      "relaunchDangerousAllowSymlinkMacos": false
     }
   }
 }

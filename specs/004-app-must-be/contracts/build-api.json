@@ -1,0 +1,532 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TransRapport Build & Packaging API",
+    "description": "CLI API for cross-platform installer generation and build automation",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/build": {
+      "post": {
+        "summary": "Build application for target platform",
+        "description": "Creates platform-specific application bundle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Build completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid build configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Build failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/package": {
+      "post": {
+        "summary": "Generate installer package",
+        "description": "Creates platform-specific installer from built application",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PackageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Package created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid package configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sign": {
+      "post": {
+        "summary": "Code sign installer package",
+        "description": "Applies digital signature to installer package",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Package signed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid signing configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validate": {
+      "post": {
+        "summary": "Validate installer package",
+        "description": "Performs integrity and compatibility validation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BuildRequest": {
+        "type": "object",
+        "required": ["platform", "version", "profile"],
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": ["windows-11", "macos", "linux-deb", "linux-rpm", "linux-appimage"],
+            "description": "Target platform for build"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Application version in MAJOR.MINOR.BUILD format"
+          },
+          "profile": {
+            "type": "string",
+            "enum": ["debug", "release"],
+            "description": "Build profile"
+          },
+          "architecture": {
+            "type": "string",
+            "enum": ["x64", "arm64", "universal"],
+            "default": "x64",
+            "description": "Target CPU architecture"
+          }
+        }
+      },
+      "BuildResponse": {
+        "type": "object",
+        "required": ["success", "build_id", "artifacts"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether build completed successfully"
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Unique identifier for this build"
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuildArtifact"
+            },
+            "description": "Generated build artifacts"
+          },
+          "build_duration": {
+            "type": "integer",
+            "description": "Build duration in seconds"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Non-fatal warnings during build"
+          }
+        }
+      },
+      "PackageRequest": {
+        "type": "object",
+        "required": ["build_id", "bundle_type", "signing_required"],
+        "properties": {
+          "build_id": {
+            "type": "string",
+            "description": "Build ID from build step"
+          },
+          "bundle_type": {
+            "type": "string",
+            "enum": ["msi", "exe", "dmg", "app", "deb", "rpm", "appimage"],
+            "description": "Target installer package type"
+          },
+          "signing_required": {
+            "type": "boolean",
+            "description": "Whether package requires code signing"
+          },
+          "file_associations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileAssociation"
+            },
+            "description": "File types to associate with application"
+          },
+          "desktop_integration": {
+            "$ref": "#/components/schemas/DesktopIntegration"
+          }
+        }
+      },
+      "PackageResponse": {
+        "type": "object",
+        "required": ["success", "package_path", "package_size", "checksum"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether packaging completed successfully"
+          },
+          "package_path": {
+            "type": "string",
+            "description": "Path to generated installer package"
+          },
+          "package_size": {
+            "type": "integer",
+            "description": "Package size in bytes"
+          },
+          "checksum": {
+            "type": "string",
+            "description": "SHA256 hash of package"
+          },
+          "dependencies_bundled": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of bundled dependencies"
+          }
+        }
+      },
+      "SignRequest": {
+        "type": "object",
+        "required": ["package_path", "platform", "certificate_source"],
+        "properties": {
+          "package_path": {
+            "type": "string",
+            "description": "Path to package to be signed"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["windows", "macos", "linux"],
+            "description": "Platform for signing"
+          },
+          "certificate_source": {
+            "type": "string",
+            "enum": ["azure_key_vault", "apple_developer", "local_certificate"],
+            "description": "Source of signing certificate"
+          },
+          "timestamp_server": {
+            "type": "string",
+            "description": "RFC 3161 timestamp server URL"
+          }
+        }
+      },
+      "SignResponse": {
+        "type": "object",
+        "required": ["success", "signature_valid", "certificate_info"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether signing completed successfully"
+          },
+          "signature_valid": {
+            "type": "boolean",
+            "description": "Whether signature validation passed"
+          },
+          "certificate_info": {
+            "$ref": "#/components/schemas/CertificateInfo"
+          },
+          "timestamp_applied": {
+            "type": "boolean",
+            "description": "Whether timestamp was successfully applied"
+          }
+        }
+      },
+      "ValidateRequest": {
+        "type": "object",
+        "required": ["package_path", "validation_type"],
+        "properties": {
+          "package_path": {
+            "type": "string",
+            "description": "Path to package to validate"
+          },
+          "validation_type": {
+            "type": "string",
+            "enum": ["integrity", "compatibility", "security", "full"],
+            "description": "Type of validation to perform"
+          },
+          "target_systems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TargetSystem"
+            },
+            "description": "Target systems for compatibility validation"
+          }
+        }
+      },
+      "ValidateResponse": {
+        "type": "object",
+        "required": ["success", "validation_results"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether validation passed"
+          },
+          "validation_results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationResult"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BuildArtifact": {
+        "type": "object",
+        "required": ["type", "path", "size"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["executable", "library", "resource", "debug_symbols"]
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to artifact file"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Artifact size in bytes"
+          },
+          "checksum": {
+            "type": "string",
+            "description": "SHA256 hash of artifact"
+          }
+        }
+      },
+      "FileAssociation": {
+        "type": "object",
+        "required": ["extension", "mime_type", "description"],
+        "properties": {
+          "extension": {
+            "type": "string",
+            "description": "File extension (without dot)"
+          },
+          "mime_type": {
+            "type": "string",
+            "description": "MIME type for file"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable file type description"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Path to file type icon"
+          }
+        }
+      },
+      "DesktopIntegration": {
+        "type": "object",
+        "properties": {
+          "create_desktop_shortcut": {
+            "type": "boolean",
+            "default": true
+          },
+          "create_start_menu_entry": {
+            "type": "boolean",
+            "default": true
+          },
+          "app_category": {
+            "type": "string",
+            "enum": ["Development", "Office", "AudioVideo", "Graphics", "Network", "Science"]
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CertificateInfo": {
+        "type": "object",
+        "required": ["subject", "issuer", "valid_from", "valid_until"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "Certificate subject name"
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Certificate issuing authority"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Certificate validity start date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Certificate expiration date"
+          },
+          "serial_number": {
+            "type": "string",
+            "description": "Certificate serial number"
+          }
+        }
+      },
+      "TargetSystem": {
+        "type": "object",
+        "required": ["os", "version", "architecture"],
+        "properties": {
+          "os": {
+            "type": "string",
+            "enum": ["windows", "macos", "linux"]
+          },
+          "version": {
+            "type": "string",
+            "description": "OS version (e.g., '11', '13.0', '22.04')"
+          },
+          "architecture": {
+            "type": "string",
+            "enum": ["x64", "arm64"]
+          }
+        }
+      },
+      "ValidationResult": {
+        "type": "object",
+        "required": ["check_name", "status", "message"],
+        "properties": {
+          "check_name": {
+            "type": "string",
+            "description": "Name of validation check performed"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "warning"],
+            "description": "Validation result status"
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed validation message"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional validation details"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error context"
+          }
+        }
+      }
+    }
+  }
+}
