@@ -10,11 +10,19 @@ import platform
 import pytest
 import subprocess
 import tempfile
-import winreg
 from pathlib import Path
+
+# Conditional import for Windows-specific modules
+try:
+    import winreg
+    WINREG_AVAILABLE = True
+except ImportError:
+    WINREG_AVAILABLE = False
+    winreg = None
 
 
 @pytest.mark.skipif(platform.system() != "Windows", reason="Windows-specific tests")
+@pytest.mark.windows
 class TestWindowsInstallation:
     """Integration tests for Windows MSI installation"""
     

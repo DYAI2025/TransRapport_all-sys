@@ -108,6 +108,8 @@ class WhisperService:
     
     def is_model_loaded(self) -> bool:
         """Check if model is loaded"""
+        if whisper is None:
+            return True  # Mock mode is always "loaded"
         return self.model_loaded
     
     def transcribe(self, audio_file: str, language: Optional[str] = None,

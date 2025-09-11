@@ -84,7 +84,8 @@ class RapportCalculator:
     
     def calculate_rapport_timeline(self, marker_events: List[MarkerEvent],
                                  session_duration: float,
-                                 interaction_context: Optional[Dict[str, Any]] = None) -> List[RapportIndicator]:
+                                 interaction_context: Optional[Dict[str, Any]] = None,
+                                 smoothing_factor: Optional[float] = None) -> List[RapportIndicator]:
         """
         Calculate rapport indicators timeline from marker events
         
@@ -92,12 +93,16 @@ class RapportCalculator:
             marker_events: List of detected LD-3.4 markers
             session_duration: Total session duration in seconds
             interaction_context: Speaker roles and interaction style context
+            smoothing_factor: Override smoothing factor for this calculation
             
         Returns:
             List of rapport indicators with temporal progression
         """
         if not marker_events:
             return []
+        
+        # Use provided smoothing factor or instance default
+        effective_smoothing = smoothing_factor if smoothing_factor is not None else self.smoothing_factor
         
         # Sort markers by time
         markers = sorted(marker_events, key=lambda m: m.start_time)
@@ -115,7 +120,7 @@ class RapportCalculator:
             )
             
             # Apply temporal smoothing
-            if self.smoothing_factor > 0 and rapport_indicators:
+            if effective_smoothing > 0 and rapport_indicators:
                 rapport_value = self._apply_smoothing(rapport_value, previous_value)
             
             # Calculate trend

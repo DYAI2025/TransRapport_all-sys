@@ -1,7 +1,6 @@
 """Contract test for 'me docs validate' CLI command."""
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 
@@ -9,9 +8,9 @@ class TestDocsValidateContract:
     """Test contract for docs validate command."""
 
     def test_docs_validate_basic_help(self):
-        """Test that 'me docs validate --help' works."""
+        """Test that 'transrapport-docs docs validate --help' works."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "validate", "--help"],
+            ["transrapport-docs", "docs", "validate", "--help"],
             capture_output=True,
             text=True,
         )
@@ -19,9 +18,9 @@ class TestDocsValidateContract:
         assert "validate" in result.stdout.lower()
 
     def test_docs_validate_basic_execution(self):
-        """Test that 'me docs validate' executes without error."""
+        """Test that 'transrapport-docs docs validate' executes without error."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "validate"],
+            ["transrapport-docs", "docs", "validate"],
             capture_output=True,
             text=True,
         )
@@ -30,9 +29,9 @@ class TestDocsValidateContract:
         assert len(result.stdout) > 0 or len(result.stderr) > 0
 
     def test_docs_validate_strict_flag(self):
-        """Test that 'me docs validate --strict' accepts the flag."""
+        """Test that 'transrapport-docs docs validate --strict' accepts the flag."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "validate", "--strict"],
+            ["transrapport-docs", "docs", "validate", "--strict"],
             capture_output=True,
             text=True,
         )
@@ -40,9 +39,9 @@ class TestDocsValidateContract:
         assert "--strict" not in result.stderr or "no such option" not in result.stderr.lower()
 
     def test_docs_validate_json_format(self):
-        """Test that 'me docs validate --format json' produces JSON output."""
+        """Test that 'transrapport-docs docs validate --format json' produces JSON output."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "validate", "--format", "json"],
+            ["transrapport-docs", "docs", "validate", "--format", "json"],
             capture_output=True,
             text=True,
         )
@@ -64,7 +63,7 @@ class TestDocsValidateContract:
         
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "doc_validator.cli.main", "docs", "validate", str(test_file)],
+                ["transrapport-docs", "docs", "validate", str(test_file)],
                 capture_output=True,
                 text=True,
             )
@@ -74,9 +73,9 @@ class TestDocsValidateContract:
             test_file.unlink(missing_ok=True)
 
     def test_docs_validate_version(self):
-        """Test that 'me --version' works."""
+        """Test that 'transrapport-docs --version' works."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "--version"],
+            ["transrapport-docs", "--version"],
             capture_output=True,
             text=True,
         )

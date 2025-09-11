@@ -4,8 +4,8 @@ User story validation test - Windows user
 CRITICAL: This test MUST FAIL before implementation.
 Tests the complete user journey for Windows 11 user installation.
 
-User Story: "As a Windows 11 user, I want to download and install TransRapport 
-with a simple double-click on an MSI installer, so I can start using the 
+User Story: "As a Windows 11 user, I want to download and install TransRapport
+with a simple double-click on an MSI installer, so I can start using the
 application immediately without technical configuration."
 """
 
@@ -15,11 +15,19 @@ import platform
 import pytest
 import subprocess
 import tempfile
-import winreg
 from pathlib import Path
+
+# Conditional import for Windows-specific modules
+try:
+    import winreg
+    WINREG_AVAILABLE = True
+except ImportError:
+    WINREG_AVAILABLE = False
+    winreg = None
 
 
 @pytest.mark.skipif(platform.system() != "Windows", reason="Windows-specific user story")
+@pytest.mark.windows
 class TestWindowsUserStory:
     """End-to-end user story validation for Windows user"""
     

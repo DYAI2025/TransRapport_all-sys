@@ -1,16 +1,15 @@
 """Contract test for 'me docs status' CLI command."""
 import json
 import subprocess
-import sys
 
 
 class TestDocsStatusContract:
     """Test contract for docs status command."""
 
     def test_docs_status_basic_help(self):
-        """Test that 'me docs status --help' works."""
+        """Test that 'transrapport-docs docs status --help' works."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "status", "--help"],
+            ["transrapport-docs", "docs", "status", "--help"],
             capture_output=True,
             text=True,
         )
@@ -18,9 +17,9 @@ class TestDocsStatusContract:
         assert "status" in result.stdout.lower()
 
     def test_docs_status_basic_execution(self):
-        """Test that 'me docs status' executes without error."""
+        """Test that 'transrapport-docs docs status' executes without error."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "status"],
+            ["transrapport-docs", "docs", "status"],
             capture_output=True,
             text=True,
         )
@@ -29,9 +28,9 @@ class TestDocsStatusContract:
         assert len(result.stdout) > 0 or len(result.stderr) > 0
 
     def test_docs_status_json_format(self):
-        """Test that 'me docs status --format json' produces JSON output."""
+        """Test that 'transrapport-docs docs status --format json' produces JSON output."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "status", "--format", "json"],
+            ["transrapport-docs", "docs", "status", "--format", "json"],
             capture_output=True,
             text=True,
         )
@@ -48,7 +47,7 @@ class TestDocsStatusContract:
     def test_docs_status_text_format_default(self):
         """Test that text format is the default."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "status"],
+            ["transrapport-docs", "docs", "status"],
             capture_output=True,
             text=True,
         )
@@ -68,7 +67,7 @@ class TestDocsStatusContract:
     def test_docs_status_help_mentions_format(self):
         """Test that help mentions format option."""
         result = subprocess.run(
-            [sys.executable, "-m", "doc_validator.cli.main", "docs", "status", "--help"],
+            ["transrapport-docs", "docs", "status", "--help"],
             capture_output=True,
             text=True,
         )

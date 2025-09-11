@@ -15,7 +15,6 @@ artifacts/
 *.sqlite3
 
 # Models/binaries go elsewhere (tracked via README)
-models/
 *.gguf
 *.bin
 *.onnx

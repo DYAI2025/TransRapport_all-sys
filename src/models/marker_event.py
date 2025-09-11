@@ -73,6 +73,16 @@ class MarkerEvent:
     tags: List[str] = field(default_factory=list)
     custom_data: Dict[str, Any] = field(default_factory=dict)
     
+    def __hash__(self):
+        """Make MarkerEvent hashable using its ID"""
+        return hash(self.id)
+    
+    def __eq__(self, other):
+        """Equality based on ID"""
+        if not isinstance(other, MarkerEvent):
+            return False
+        return self.id == other.id
+    
     def __post_init__(self):
         """Post-initialization validation"""
         # Validate marker type
