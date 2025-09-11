@@ -18,8 +18,8 @@ try:
     SQLCIPHER_AVAILABLE = True
 except ImportError:
     SQLCIPHER_AVAILABLE = False
-    # Fallback to regular sqlite3 for development
-    sqlcipher3 = sqlite3
+    # No fallback - require SQLCipher for security
+    raise RuntimeError("SQLCipher nicht installiert. Start abgebrochen: keine Verschlüsselung möglich. Installiere sqlcipher3-binary.")
 
 logger = logging.getLogger(__name__)
 

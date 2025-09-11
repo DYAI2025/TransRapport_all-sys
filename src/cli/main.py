@@ -187,7 +187,13 @@ def status(ctx):
         click.echo(f"  Transcription: ✅")
         click.echo(f"  LD-3.4 Analysis: ✅")
         click.echo(f"  Export: ✅")
-        click.echo(f"  Storage: ✅")
+        
+        # Check encryption status
+        try:
+            import sqlcipher3
+            click.echo(f"  Storage: ✅ (SQLCipher encrypted)")
+        except ImportError:
+            click.echo(f"  Storage: ❌ (No encryption - install sqlcipher3-binary)")
         
     except Exception as e:
         click.echo(f"Status check error: {e}", err=True)

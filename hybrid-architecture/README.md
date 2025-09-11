@@ -1,0 +1,1 @@
+Hybrid Architecture Workspace Created

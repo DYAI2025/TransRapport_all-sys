@@ -1,0 +1,5 @@
+Alice: Hello, how are you doing today?
+Bob: I'm doing well, thank you for asking. How about you?
+Alice: I'm great! The weather is beautiful outside.
+Bob: Yes, it's perfect for a walk in the park.
+Alice: That sounds wonderful. Shall we go together?

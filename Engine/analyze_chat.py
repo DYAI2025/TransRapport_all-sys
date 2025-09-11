@@ -11,21 +11,45 @@ from datetime import datetime
 from pathlib import Path
 from collections import defaultdict, Counter
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import pandas as pd
-import yaml
+# Optional imports with fallbacks
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    plt = None
 
-# Import Absence Detection Module
-from DETECT_absence_meta import integrate_absence_detection
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
+    pd = None
+
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+    yaml = None
+
+# Import Absence Detection Module (optional)
+try:
+    from DETECT_absence_meta import integrate_absence_detection
+    ABSENCE_AVAILABLE = True
+except ImportError:
+    ABSENCE_AVAILABLE = False
+    def integrate_absence_detection(*args, **kwargs):
+        return args[1] if len(args) > 1 else []
 
 # -------------------------
-# Paths & defaults
+# Paths & defaults (configurable via environment or CLI)
 # -------------------------
-DEFAULT_ZIP_SCHEMA = Path("/mnt/data/ALL_SCH.SCR_,CAL.zip")
-DEFAULT_ZIP_MARKERS = Path("/mnt/data/FIXED_Marker_4.0.zip")
-DEFAULT_ZIP_DETECTORS = Path("/mnt/data/ALL_DETECTORS.zip")  # optional
+DEFAULT_ZIP_SCHEMA = Path(os.getenv("TRANSRAPPORT_SCHEMA_ZIP", "data/schema.zip"))
+DEFAULT_ZIP_MARKERS = Path(os.getenv("TRANSRAPPORT_MARKERS_ZIP", "data/markers.zip"))
+DEFAULT_ZIP_DETECTORS = Path(os.getenv("TRANSRAPPORT_DETECTORS_ZIP", "data/detectors.zip"))  # optional
 
 # Extra configs delivered below in this message (copy as files next to this script)
 THEMES_MAP_PATH = Path("themes_map.yaml")
@@ -444,13 +468,15 @@ def build_objective_tips(per_speaker_hits, R: Resources):
 # Charts (one plot per chart, with colors)
 # -------------------------
 def _fig_to_base64(fig):
+    if not MATPLOTLIB_AVAILABLE or fig is None:
+        return ""
     buf = io.BytesIO()
     fig.savefig(buf, format="png", dpi=160, bbox_inches="tight")
     plt.close(fig)
     return base64.b64encode(buf.getvalue()).decode("ascii")
 
 def chart_donut(counts: dict, title: str):
-    if not counts:
+    if not MATPLOTLIB_AVAILABLE or not counts:
         return None
     labels = list(counts.keys())
     sizes = list(counts.values())
@@ -471,6 +497,8 @@ def chart_bar_compare(rows, title: str):
     return _fig_to_base64(fig)
 
 def chart_ed_bars(E, D, title="E vs D (gesamt)"):
+    if not MATPLOTLIB_AVAILABLE:
+        return None
     fig, ax = plt.subplots()
     ax.bar(["Eskalation (E)"], [E], color=BAR_NEG)
     ax.bar(["Deeskalation (D)"], [D], color=BAR_POS)
@@ -480,7 +508,11 @@ def chart_ed_bars(E, D, title="E vs D (gesamt)"):
 
 def chart_timeseries_ed(msgs, hits, E_SET, D_SET, window=20, title="E/D über Zeit (rollierend)"):
     """Simple block windows (non-overlapping) to keep it transparent and fast."""
-    n = len(msgs); if n == 0: return None
+    if not MATPLOTLIB_AVAILABLE:
+        return None
+    n = len(msgs)
+    if n == 0:
+        return None
     xs, e_vals, d_vals = [], [], []
     for i,j in rolling_windows(n, max(1, window)):
         xs.append(f"{i}-{j-1}")
@@ -496,9 +528,10 @@ def chart_timeseries_ed(msgs, hits, E_SET, D_SET, window=20, title="E/D über Ze
     return _fig_to_base64(fig)
 
 def chart_theme_resonance(theme_scores: dict, title="Themen-Resonanz (gesamt)"):
-    if not theme_scores: return None
+    if not MATPLOTLIB_AVAILABLE or not theme_scores:
+        return None
     items = sorted(theme_scores.items(), key=lambda kv: -kv[1])[:8]
-    labels = [R if isinstance(R, str) else str(R) for R,_ in items]
+    labels = [k if isinstance(k, str) else str(k) for k,_ in items]
     values = [v for _,v in items]
     fig, ax = plt.subplots()
     ax.bar(labels, values, color=PALETTE[:len(labels)])
@@ -507,6 +540,8 @@ def chart_theme_resonance(theme_scores: dict, title="Themen-Resonanz (gesamt)"):
     return _fig_to_base64(fig)
 
 def chart_top_markers_per_speaker(per_speaker_hits, marker_labels, topk=8):
+    if not MATPLOTLIB_AVAILABLE:
+        return {}
     imgs = {}
     for spk, hits in per_speaker_hits.items():
         cnt = Counter([h["marker"] for h in hits])
@@ -561,8 +596,8 @@ def render_html_report(template_html: str, context: dict) -> str:
 def mat_html(s):  # minimal escape
     return (s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;"))
 
-def df_to_table(df: pd.DataFrame):
-    if df is None or df.empty:
+def df_to_table(df):
+    if not PANDAS_AVAILABLE or df is None or df.empty:
         return "<em>Keine Daten</em>"
     # light styling inline
     return df.to_html(index=False, border=0, classes="table table-striped")
@@ -605,6 +640,14 @@ def main():
 
     args.outdir.mkdir(parents=True, exist_ok=True)
 
+    # Check for required ZIP files
+    if not args.zip_schema.exists():
+        print(f"WARNING: Schema ZIP not found: {args.zip_schema}")
+        print("Set TRANSRAPPORT_SCHEMA_ZIP environment variable or use --zip-schema")
+    if not args.zip_markers.exists():
+        print(f"WARNING: Markers ZIP not found: {args.zip_markers}")
+        print("Set TRANSRAPPORT_MARKERS_ZIP environment variable or use --zip-markers")
+
     # Load text
     chat_text = args.input.read_text(encoding="utf-8", errors="ignore")
 
@@ -646,7 +689,12 @@ def main():
             "E": Es, "D": Ds,
             "E-Anteil": round((Es/total) if total else 0.0, 3)
         })
-    df_compare = pd.DataFrame(rows).sort_values(by="Marker gesamt", ascending=False)
+    
+    if rows:
+        df_compare = pd.DataFrame(rows).sort_values(by="Marker gesamt", ascending=False)
+    else:
+        # Handle case with no data
+        df_compare = pd.DataFrame(columns=["Person", "Marker gesamt", "E", "D", "E-Anteil"])
 
     # Text blocks (strictly marker-based)
     overview_txt = textwrap.dedent(f"""

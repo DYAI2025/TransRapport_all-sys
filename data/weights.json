@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "config_type": "LeanDeep_3.3_Weights_Configuration",
+    "generated_at": "2025-08-19T03:16:06.101457",
+    "version": "3.3.0"
+  },
+  "weights": {
+    "ato_markers": {
+      "default": 1.0,
+      "specific": {
+        "ATO_CARE_PING": 1.5,
+        "ATO_STATUS_PING": 1.5,
+        "ATO_BOUNDARY_NEGOTIATION": 2.5,
+        "ATO_YOUR_FAULT_PHRASE": 2.0,
+        "ATO_COLD_LABEL": 2.0
+      }
+    },
+    "sem_markers": {
+      "default": 3.0,
+      "specific": {
+        "SEM_VICTIM_OFFENDER_REVERSAL": 4.0,
+        "SEM_GUILT_APPEAL_NEEDINESS": 3.5,
+        "SEM_PERFORMATIVE_HELPLESSNESS": 3.5
+      }
+    },
+    "clu_markers": {
+      "default": 8.0,
+      "specific": {
+        "CLU_NEEDINESS_GUILT_BIND": 10.0,
+        "CLU_REASSURANCE_SEEKING_LOOP": 8.5
+      }
+    },
+    "mema_markers": {
+      "default": 15.0,
+      "specific": {
+        "MEMA_PERSISTENT_NEEDINESS_GUILT_BIND": 20.0,
+        "MEMA_ABSENCE_OF_DEROGATION_IN_CONFLICT": 12.0,
+        "MEMA_ABSENCE_OF_THREAT_IN_CONFLICT": 12.0,
+        "MEMA_ABSENCE_OF_ULTIMATUM_IN_CONFLICT": 12.0,
+        "MEMA_ABSENCE_OF_CHARACTER_ATTACK_IN_CONFLICT": 12.0
+      }
+    }
+  }
+}
