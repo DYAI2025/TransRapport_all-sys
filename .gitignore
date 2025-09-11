@@ -13,6 +13,7 @@ artifacts/
 *.db
 *.sqlite
 *.sqlite3
+
 # Models/binaries go elsewhere (tracked via README)
 models/
 *.gguf
@@ -21,3 +22,22 @@ models/
 *.wav
 *.mp3
 *.pdf
+
+# Large ML libraries and wheels
+*.whl
+*.so
+*.so.*
+libtorch_*
+libcudnn_*
+libcublas*
+libcusparse*
+libnccl*
+libcufft*
+libtriton*
+
+# Bundle directory with large files
+bundle/
+
+# Desktop build artifacts
+desktop/node_modules/
+desktop/dist/
