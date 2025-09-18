@@ -1,13 +1,15 @@
 """Implementation of 'me docs status' CLI command."""
-import click
 import json
-from pathlib import Path
 from datetime import datetime
-from typing import List, Dict
+from pathlib import Path
+from typing import Dict, List
 
+import click
+
+from ..services.crossref_validator import CrossReferenceValidator
 from ..services.doc_parser import DocumentationParser
 from ..services.terminology_extractor import TerminologyExtractor
-from ..services.crossref_validator import CrossReferenceValidator
+from .utils import resolve_docs_root
 
 
 @click.command()
@@ -15,7 +17,7 @@ from ..services.crossref_validator import CrossReferenceValidator
               default='text', help='Output format')
 def status(output_format: str) -> None:
     """Get documentation status."""
-    current_dir = Path.cwd()
+    current_dir = resolve_docs_root(Path.cwd())
     
     # Parse documentation files
     doc_parser = DocumentationParser()

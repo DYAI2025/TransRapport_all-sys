@@ -74,64 +74,24 @@ class PackageService:
     
     def package(self, request: PackageRequest) -> PackageResponse:
         """Package build artifacts into distribution format
-        
+
         Args:
             request: Package request parameters
-            
+
         Returns:
             PackageResponse with packaging results
         """
-        start_time = time.time()
-        
-        try:
-            logger.info(f"Starting packaging for build {request.build_id} as {request.bundle_type.value}")
-            
-            # Validate request
-            validation_error = self._validate_package_request(request)
-            if validation_error:
-                return create_error_response(
-                    PackageResponse,
-                    "INVALID_REQUEST",
-                    validation_error
-                )
-            
-            # Resolve build artifacts
-            build_info = self._resolve_build_artifacts(request.build_id)
-            if not build_info:
-                return create_error_response(
-                    PackageResponse,
-                    "BUILD_NOT_FOUND",
-                    f"Build artifacts not found for build ID: {request.build_id}"
-                )
-            
-            # Create package based on bundle type
-            package_result = self._create_package(request, build_info)
-            
-            if not package_result.success:
-                return package_result
-            
-            # Optimize package if needed
-            optimization_result = self._optimize_package(package_result.package, request)
-            if optimization_result:
-                package_result.package = optimization_result
-            
-            package_time = time.time() - start_time
-            package_result.package_time = package_time
-            
-            logger.info(f"Packaging completed successfully in {package_time:.2f}s")
-            
-            return package_result
-            
-        except Exception as e:
-            logger.error(f"Packaging failed: {e}", exc_info=True)
-            package_time = time.time() - start_time
-            
-            return PackageResponse(
-                success=False,
-                error="PACKAGING_FAILED",
-                message=f"Packaging failed after {package_time:.2f}s: {str(e)}",
-                package_time=package_time
-            )
+        logger.info(
+            "Packaging requested for build %s (%s) – service not yet implemented",
+            request.build_id,
+            request.bundle_type.value,
+        )
+
+        return create_error_response(
+            PackageResponse,
+            "NOT_IMPLEMENTED",
+            "Package service not yet implemented for offline packaging pipeline.",
+        )
     
     def _validate_package_request(self, request: PackageRequest) -> Optional[str]:
         """Validate package request parameters

@@ -75,63 +75,25 @@ class BuildService:
     
     def build(self, request: BuildRequest) -> BuildResponse:
         """Build the application for specified platform
-        
+
         Args:
             request: Build request parameters
-            
+
         Returns:
             BuildResponse with build results
         """
-        start_time = time.time()
-        
-        try:
-            logger.info(f"Starting build for {request.platform.value} {request.version} {request.profile.value}")
-            
-            # Validate request
-            validation_error = self._validate_build_request(request)
-            if validation_error:
-                return create_error_response(
-                    BuildResponse,
-                    "INVALID_REQUEST",
-                    validation_error
-                )
-            
-            # Set up build environment
-            build_env = self._setup_build_environment(request)
-            
-            # Execute Tauri build
-            build_result = self._execute_tauri_build(request, build_env)
-            
-            if not build_result.success:
-                return build_result
-            
-            # Collect build artifacts
-            artifacts = self._collect_build_artifacts(request)
-            
-            # Generate build ID
-            build_id = self._generate_build_id(request)
-            
-            build_time = time.time() - start_time
-            
-            logger.info(f"Build completed successfully in {build_time:.2f}s")
-            
-            return BuildResponse(
-                success=True,
-                build_id=build_id,
-                artifacts=artifacts,
-                build_time=build_time
-            )
-            
-        except Exception as e:
-            logger.error(f"Build failed: {e}", exc_info=True)
-            build_time = time.time() - start_time
-            
-            return BuildResponse(
-                success=False,
-                error="BUILD_FAILED",
-                message=f"Build failed after {build_time:.2f}s: {str(e)}",
-                build_time=build_time
-            )
+        logger.info(
+            "Build requested for %s %s (%s) – service not yet implemented",
+            request.platform.value,
+            request.version,
+            request.profile.value,
+        )
+
+        return create_error_response(
+            BuildResponse,
+            "NOT_IMPLEMENTED",
+            "Build service not yet implemented for offline packaging pipeline.",
+        )
     
     def _validate_build_request(self, request: BuildRequest) -> Optional[str]:
         """Validate build request parameters

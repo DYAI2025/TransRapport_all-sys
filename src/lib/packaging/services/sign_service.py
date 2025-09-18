@@ -77,68 +77,24 @@ class SignService:
     
     def sign(self, request: SignRequest) -> SignResponse:
         """Sign a package with appropriate certificate
-        
+
         Args:
             request: Sign request parameters
-            
+
         Returns:
             SignResponse with signing results
         """
-        start_time = time.time()
-        
-        try:
-            logger.info(f"Starting signing for {request.package_path} on {request.platform.value}")
-            
-            # Validate request
-            validation_error = self._validate_sign_request(request)
-            if validation_error:
-                return create_error_response(
-                    SignResponse,
-                    "INVALID_REQUEST",
-                    validation_error
-                )
-            
-            # Check if package exists
-            package_path = Path(request.package_path)
-            if not package_path.exists():
-                return create_error_response(
-                    SignResponse,
-                    "PACKAGE_NOT_FOUND",
-                    f"Package not found: {request.package_path}"
-                )
-            
-            # Load certificate configuration
-            cert_config = self._get_certificate_config(request.platform, request.certificate_source)
-            if not cert_config:
-                return create_error_response(
-                    SignResponse,
-                    "CERTIFICATE_CONFIG_NOT_FOUND",
-                    f"Certificate configuration not found for {request.platform.value} using {request.certificate_source.value}"
-                )
-            
-            # Perform signing based on platform
-            signing_result = self._perform_signing(request, cert_config, package_path)
-            
-            if not signing_result.success:
-                return signing_result
-            
-            signing_time = time.time() - start_time
-            signing_result.signing_time = signing_time
-            
-            logger.info(f"Signing completed successfully in {signing_time:.2f}s")
-            
-            return signing_result
-            
-        except Exception as e:
-            logger.error(f"Signing failed: {e}", exc_info=True)
-            signing_time = time.time() - start_time
-            
-            return SignResponse(
-                success=False,
-                error="SIGNING_FAILED",
-                message=f"Signing failed after {signing_time:.2f}s: {str(e)}",
-                signing_time=signing_time
-            )
+        logger.info(
+            "Signing requested for %s on %s – service not yet implemented",
+            request.package_path,
+            request.platform.value,
+        )
+
+        return create_error_response(
+            SignResponse,
+            "NOT_IMPLEMENTED",
+            "Sign service not yet implemented for offline packaging pipeline.",
+        )
     
     def _validate_sign_request(self, request: SignRequest) -> Optional[str]:
         """Validate sign request parameters
