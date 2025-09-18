@@ -6,6 +6,7 @@ from typing import Optional
 
 from ..services.validation_engine import ValidationEngine
 from ..services.doc_parser import DocumentationParser
+from .utils import resolve_docs_root
 
 
 @click.command()
@@ -21,9 +22,9 @@ def validate(strict: bool, output_format: str, files: tuple) -> None:
         # Validate specific files
         results = _validate_specific_files(validation_engine, files, strict)
     else:
-        # Validate all documentation in current directory
-        current_dir = Path.cwd()
-        results = validation_engine.validate_directory(current_dir, strict=strict)
+        # Validate all documentation in detected documentation root
+        docs_root = resolve_docs_root(Path.cwd())
+        results = validation_engine.validate_directory(docs_root, strict=strict)
     
     if output_format == 'json':
         click.echo(json.dumps(results, indent=2))

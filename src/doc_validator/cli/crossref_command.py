@@ -2,30 +2,42 @@
 import click
 import json
 from pathlib import Path
-from typing import Optional, List
+from typing import List, Optional
 
-from ..services.crossref_validator import CrossReferenceValidator
 from ..models.cross_reference import CrossReference
+from ..services.crossref_validator import CrossReferenceValidator
+from .utils import resolve_docs_root
 
 
-@click.command(name='cross-ref')
-@click.option('--term', help='Specific term to check references for')
-@click.option('--file', 'file_path', type=click.Path(exists=True), 
-              help='Specific file to check references in')
-@click.option('--format', 'output_format', type=click.Choice(['json', 'text']), 
-              default='text', help='Output format')
-def cross_ref(term: Optional[str], file_path: Optional[str], output_format: str) -> None:
+@click.command(name="cross-ref")
+@click.option("--term", help="Specific term to check references for")
+@click.option(
+    "--file",
+    "file_path",
+    type=click.Path(exists=True, path_type=Path),
+    help="Specific file to check references in",
+)
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["json", "text"]),
+    default="text",
+    help="Output format",
+)
+def cross_ref(
+    term: Optional[str], file_path: Optional[Path], output_format: str
+) -> None:
     """Check cross-references."""
     validator = CrossReferenceValidator()
     
     if file_path:
         # Check references in specific file
-        file_refs = validator._validate_file(Path(file_path))
+        file_refs = validator._validate_file(file_path)
         all_refs = file_refs
     else:
-        # Check references in current directory
-        current_dir = Path.cwd()
-        all_refs = validator.validate_directory(current_dir)
+        # Check references in detected documentation root
+        docs_root = resolve_docs_root(Path.cwd())
+        all_refs = validator.validate_directory(docs_root)
     
     # Filter by term if specified
     if term:
@@ -82,7 +94,9 @@ def _prepare_crossref_results(references: List[CrossReference], term_filter: Opt
     }
 
 
-def _format_crossref_text_output(results: dict, term_filter: Optional[str], file_filter: Optional[str]) -> None:
+def _format_crossref_text_output(
+    results: dict, term_filter: Optional[str], file_filter: Optional[Path]
+) -> None:
     """Format cross-reference results as human-readable text."""
     references = results.get('references', [])
     broken_links = results.get('broken_links', [])

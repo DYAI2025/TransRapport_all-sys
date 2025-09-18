@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Execute the TransRapport documentation CLI without requiring installation.
+
+This wrapper ensures the source tree's ``src`` directory is available on the
+module search path so that the ``doc_validator`` package can be imported even
+when the project hasn't been installed.  It simply forwards execution to the
+``doc_validator.cli.main`` entry point.
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SRC_DIR = REPO_ROOT / "src"
+
+# Prepend the ``src`` directory so imports resolve in editable checkouts.
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+# Some tooling expects the repository root on ``PATH`` for auxiliary helpers
+# (for example documentation templates).  Adding it here is harmless and keeps
+# behaviour consistent with an installed package.
+repo_bin = REPO_ROOT / "bin"
+current_path = os.environ.get("PATH", "")
+if repo_bin.exists() and str(repo_bin) not in current_path.split(os.pathsep):
+    os.environ["PATH"] = os.pathsep.join(
+        [str(repo_bin)] + [p for p in current_path.split(os.pathsep) if p]
+    )
+
+from doc_validator.cli.main import main
+
+
+if __name__ == "__main__":
+    sys.exit(main())

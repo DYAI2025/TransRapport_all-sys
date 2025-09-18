@@ -118,75 +118,24 @@ class ValidateService:
     
     def validate(self, request: ValidateRequest) -> ValidateResponse:
         """Validate a package according to specified validation type
-        
+
         Args:
             request: Validation request parameters
-            
+
         Returns:
             ValidateResponse with validation results
         """
-        start_time = time.time()
-        
-        try:
-            logger.info(f"Starting validation for {request.package_path} with type {request.validation_type.value}")
-            
-            # Validate request
-            validation_error = self._validate_request(request)
-            if validation_error:
-                return create_error_response(
-                    ValidateResponse,
-                    "INVALID_REQUEST",
-                    validation_error
-                )
-            
-            # Check if package exists
-            package_path = Path(request.package_path)
-            if not package_path.exists():
-                return create_error_response(
-                    ValidateResponse,
-                    "PACKAGE_NOT_FOUND",
-                    f"Package not found: {request.package_path}"
-                )
-            
-            # Perform validation based on type
-            validation_results = []
-            
-            if request.validation_type in [ValidationType.INTEGRITY, ValidationType.FULL]:
-                integrity_results = self._validate_integrity(package_path)
-                validation_results.extend(integrity_results)
-            
-            if request.validation_type in [ValidationType.COMPATIBILITY, ValidationType.FULL]:
-                compatibility_results = self._validate_compatibility(package_path)
-                validation_results.extend(compatibility_results)
-            
-            if request.validation_type in [ValidationType.SECURITY, ValidationType.FULL]:
-                security_results = self._validate_security(package_path)
-                validation_results.extend(security_results)
-            
-            # Determine overall validity
-            overall_valid = all(result.passed for result in validation_results)
-            
-            validation_time = time.time() - start_time
-            
-            logger.info(f"Validation completed in {validation_time:.2f}s - Overall valid: {overall_valid}")
-            
-            return ValidateResponse(
-                success=True,
-                validation_results=validation_results,
-                overall_valid=overall_valid,
-                validation_time=validation_time
-            )
-            
-        except Exception as e:
-            logger.error(f"Validation failed: {e}", exc_info=True)
-            validation_time = time.time() - start_time
-            
-            return ValidateResponse(
-                success=False,
-                error="VALIDATION_FAILED",
-                message=f"Validation failed after {validation_time:.2f}s: {str(e)}",
-                validation_time=validation_time
-            )
+        logger.info(
+            "Validation requested for %s (%s) – service not yet implemented",
+            request.package_path,
+            request.validation_type.value,
+        )
+
+        return create_error_response(
+            ValidateResponse,
+            "NOT_IMPLEMENTED",
+            "Validate service not yet implemented for offline packaging pipeline.",
+        )
     
     def _validate_request(self, request: ValidateRequest) -> Optional[str]:
         """Validate validation request parameters
